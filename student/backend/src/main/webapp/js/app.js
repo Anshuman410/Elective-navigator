@@ -3,6 +3,7 @@ const API_BASE_URL = '';
 
 let globalElectives = [];
 let selectedForCompare = [];
+let currentAnalysis = null;
 
 /**
  * Handle student registration
@@ -173,36 +174,110 @@ function renderPostSelectionView(subjectName) {
         });
 }
 
-function renderElectivesGrid(recommendedCategory = null) {
+function getElectiveTrait(elective) {
+    const cat = (elective.category || '').toLowerCase();
+    const name = (elective.subjectName || '').toLowerCase();
+
+    if (cat.includes('program') || name.includes('machine learning') || name.includes('data science') || name.includes('artificial intelligence') || name.includes('c++') || name.includes('java')) return 'Programming';
+    if (cat.includes('develop') || name.includes('web') || name.includes('app') || name.includes('software')) return 'Development';
+    if (cat.includes('manage') || name.includes('project') || name.includes('business') || name.includes('mba') || name.includes('cloud')) return 'Management';
+    if (cat.includes('research') || cat.includes('security') || name.includes('cyber') || name.includes('blockchain') || name.includes('data analysis')) return 'Research';
+    
+    const mapping = {
+        'Programming': ['Machine Learning', 'Data Science', 'Artificial Intelligence', 'Programming'],
+        'Development': ['Web Development', 'App Development', 'Software Engineering', 'Development'],
+        'Management': ['Project Management', 'Business Analytics', 'MBA Basics', 'Management', 'Cloud'],
+        'Research': ['Cyber Security', 'Blockchain', 'Data Analysis', 'Data Analysis with R', 'Research']
+    };
+    
+    for (const [trait, subjects] of Object.entries(mapping)) {
+        if (subjects.find(s => s.toLowerCase() === name || s.toLowerCase() === cat)) {
+            return trait;
+        }
+    }
+
+    return 'Programming';
+}
+
+function renderElectivesGrid() {
     const grid = document.getElementById('electivesGrid');
     grid.innerHTML = '';
     grid.classList.remove('hidden');
-    
-    const mapping = {
-        'Programming': ['Machine Learning', 'Data Science', 'Artificial Intelligence'],
-        'Development': ['Web Development', 'App Development', 'Software Engineering'],
-        'Management': ['Project Management', 'Business Analytics', 'MBA Basics'],
-        'Research': ['Cyber Security', 'Blockchain', 'Data Analysis']
-    };
 
-    let recommendedSubjects = [];
-    if (recommendedCategory && mapping[recommendedCategory]) {
-        recommendedSubjects = mapping[recommendedCategory].map(s => s.toLowerCase());
+    const msgBox = document.getElementById('analysisMsgBox');
+    if (msgBox) msgBox.remove();
+    
+    let electivesToRender = [...globalElectives];
+
+    if (currentAnalysis) {
+        const msg = document.createElement('div');
+        msg.id = 'analysisMsgBox';
+        msg.className = "bg-slate-800/80 border border-indigo-500/50 p-6 rounded-2xl mb-8 mx-auto max-w-4xl shadow-lg";
+        
+        let analysisHtml = `<h3 class="text-2xl font-bold text-white mb-4 text-center">Your Analytical Priority Report</h3>`;
+        analysisHtml += `<p class="text-slate-300 mb-6 text-center text-sm md:text-base">Based on your quiz performance, we've analytically ranked your dominant traits. The subjects below are prioritized accordingly.</p>`;
+        
+        analysisHtml += `<div class="space-y-4">`;
+        currentAnalysis.forEach((cat, index) => {
+            if (cat.score > 0) {
+                analysisHtml += `
+                    <div class="flex items-start gap-4 p-4 rounded-xl ${index === 0 ? 'bg-indigo-500/20 border border-indigo-500/30' : 'bg-slate-900/50 border border-slate-700/50'}">
+                        <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center shrink-0 border border-indigo-500/30">
+                            ${index + 1}
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-lg mb-1">${cat.trait} <span class="text-xs text-slate-400 font-normal ml-2">(Score: ${cat.score})</span></h4>
+                            <p class="text-slate-400 text-sm leading-relaxed">${cat.reason} ${index === 0 ? '<strong class="text-indigo-400">This trait defines your top priority.</strong>' : ''}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+        analysisHtml += `</div>`;
+        msg.innerHTML = analysisHtml;
+        grid.parentNode.insertBefore(msg, grid);
+
+        electivesToRender = electivesToRender.map(elective => {
+            const catName = getElectiveTrait(elective);
+            const traitDetail = currentAnalysis.find(c => c.trait === catName);
+            const score = traitDetail ? traitDetail.score : 0;
+            const rank = currentAnalysis.findIndex(c => c.trait === catName) + 1;
+            return { ...elective, priorityScore: score, mappedTrait: catName, rank: rank, reason: traitDetail ? traitDetail.reason : '' };
+        });
+
+        electivesToRender.sort((a, b) => b.priorityScore - a.priorityScore);
     }
     
-    globalElectives.forEach(elective => {
-        const isRecommended = recommendedSubjects.includes(elective.subjectName.toLowerCase());
+    electivesToRender.forEach((elective, idx) => {
+        const isTopRecommend = currentAnalysis ? elective.rank === 1 : false;
         const isChecked = selectedForCompare.includes(elective.subjectName);
 
         const card = document.createElement('div');
         let cardClasses = 'bg-slate-800/80 border hover:border-indigo-500/50 transition-all p-6 rounded-2xl flex flex-col justify-between h-full relative ';
-        cardClasses += isRecommended ? 'border-pink-500/50 shadow-[0_0_15px_rgba(236,72,153,0.15)]' : 'border-slate-700/50';
+        cardClasses += isTopRecommend ? 'border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.15)]' : 'border-slate-700/50';
         card.className = cardClasses;
         
-        const recBadge = isRecommended ? `<span class="absolute -top-3 left-6 bg-pink-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg border border-pink-400">RECOMMENDED</span>` : '';
+        let badgeHtml = '';
+        if (currentAnalysis) {
+            if (isTopRecommend) {
+                badgeHtml = `<span class="absolute -top-3 left-6 bg-indigo-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-lg border border-indigo-400">Priority #${idx + 1} • Top Match</span>`;
+            } else {
+                badgeHtml = `<span class="absolute -top-3 left-6 bg-slate-700 text-slate-200 text-[10px] font-bold px-3 py-1 rounded-full shadow-lg border border-slate-600">Priority #${idx + 1}</span>`;
+            }
+        }
+
+        let reasonHtml = '';
+        if (currentAnalysis) {
+            reasonHtml = `
+                <div class="bg-slate-900/50 border border-slate-700/50 rounded-lg p-3 mb-4">
+                    <p class="text-xs text-slate-400 mb-1 font-semibold uppercase tracking-wider">Why Priority #${idx + 1}?</p>
+                    <p class="text-xs text-slate-300 leading-relaxed">Matches your <span class="text-indigo-400 font-bold">${elective.mappedTrait}</span> trait. ${elective.reason}</p>
+                </div>
+            `;
+        }
 
         card.innerHTML = `
-            ${recBadge}
+            ${badgeHtml}
             <div>
                 <div class="flex justify-between items-start mb-4 mt-2">
                     <div class="w-12 h-12 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-xl flex items-center justify-center text-indigo-400 border border-indigo-500/20">
@@ -214,10 +289,11 @@ function renderElectivesGrid(recommendedCategory = null) {
                     </label>
                 </div>
                 <h3 class="text-xl font-bold text-white mb-2">${elective.subjectName}</h3>
-                <p class="text-slate-400 text-sm flex items-center gap-2">
+                <p class="text-slate-400 text-sm flex items-center gap-2 mb-3">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     Prof. ${elective.teacher}
                 </p>
+                ${reasonHtml}
                 <div class="mt-4 flex flex-wrap gap-2 mb-6">
                     <span class="bg-slate-700/50 text-slate-300 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide">${elective.category || 'N/A'}</span>
                     <span class="bg-slate-700/50 text-slate-300 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide text-amber-400">${elective.difficulty || 'N/A'}</span>
@@ -405,29 +481,40 @@ function calculateQuizResults() {
         }
     }
     
-    // Find highest
-    let highestCategory = 'Programming';
-    let max = scores.programmingScore;
-    
-    if (scores.managementScore > max) { max = scores.managementScore; highestCategory = 'Management'; }
-    if (scores.researchScore > max) { max = scores.researchScore; highestCategory = 'Research'; }
-    if (scores.developmentScore > max) { max = scores.developmentScore; highestCategory = 'Development'; }
+    let categoryDetails = [
+        {
+            trait: 'Programming',
+            score: scores.programmingScore,
+            reason: 'Your answers heavily favor coding, logical problem-solving, and building technical foundations.'
+        },
+        {
+            trait: 'Development',
+            score: scores.developmentScore,
+            reason: 'You showed a keen interest in building projects, practical applications, and software engineering.'
+        },
+        {
+            trait: 'Management',
+            score: scores.managementScore,
+            reason: 'You prefer taking leadership roles, focusing on business goals, and managing teams.'
+        },
+        {
+            trait: 'Research',
+            score: scores.researchScore,
+            reason: 'Your choices indicate a preference for theoretical depth, exploration, and specialized analytical fields.'
+        }
+    ];
+
+    // Sort descending by score
+    categoryDetails.sort((a, b) => b.score - a.score);
     
     closeQuizModal();
     
+    // Store globally to use inside renderElectivesGrid
+    currentAnalysis = categoryDetails;
+    
     // Scroll and show results
     window.scrollTo({ top: document.getElementById('preSelectionView').offsetTop - 50, behavior: 'smooth' });
-    renderElectivesGrid(highestCategory);
-    
-    // Highlight message
-    const msg = document.createElement('div');
-    msg.className = "bg-pink-500/10 border border-pink-500/30 text-pink-300 p-4 rounded-xl mb-6 mx-auto max-w-3xl text-center font-medium animate-pulse";
-    msg.innerHTML = `Based on your answers, your dominant trait is <strong class="text-pink-400 text-lg uppercase">${highestCategory}</strong>! We've highlighted our top recommendations for you.`;
-    
-    const grid = document.getElementById('electivesGrid');
-    grid.parentNode.insertBefore(msg, grid);
-    
-    setTimeout(() => { if (msg.parentNode) msg.parentNode.removeChild(msg); }, 10000);
+    renderElectivesGrid();
 }
 
 // ----------------- FINAL SELECTION LOGIC -----------------
