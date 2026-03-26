@@ -10,7 +10,7 @@
         body { font-family: 'Outfit', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-900 text-white min-h-screen flex items-center justify-center p-4 relative overflow-y-auto">
+<body class="bg-slate-50 text-slate-800 min-h-screen flex items-center justify-center p-4 relative overflow-y-auto">
 
     <!-- Background Elements -->
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
@@ -18,34 +18,34 @@
         <div class="absolute bottom-[20%] right-[10%] w-96 h-96 bg-indigo-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-blob"></div>
     </div>
 
-    <div class="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl relative">
+    <div class="w-full max-w-md bg-white hover:bg-slate-50 backdrop-blur-xl border border-slate-200 p-8 rounded-3xl shadow-2xl relative">
         
-        <a href="index.html" class="absolute top-8 left-8 text-slate-400 hover:text-white transition-colors">
+        <a href="index.html" class="absolute top-8 left-8 text-slate-500 hover:text-slate-800 transition-colors">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
         </a>
 
         <div class="text-center mb-10 mt-6">
             <h2 class="text-3xl font-bold mb-2">Welcome Back</h2>
-            <p class="text-slate-400 text-sm">Please log in to your student account.</p>
+            <p class="text-slate-500 text-sm">Please log in to your student account.</p>
         </div>
 
         <form id="loginForm" class="space-y-6">
             
             <div class="space-y-2">
-                <label class="text-sm font-medium text-slate-300">Student ID</label>
-                <input type="text" id="loginStudentId" required class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all" placeholder="e.g. STU1234">
+                <label class="text-sm font-medium text-slate-600">Student ID</label>
+                <input type="text" id="loginStudentId" required class="w-full bg-white border border-slate-200 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all" placeholder="e.g. STU1234">
             </div>
 
             <div class="space-y-2">
                 <div class="flex justify-between">
-                    <label class="text-sm font-medium text-slate-300">Password</label>
+                    <label class="text-sm font-medium text-slate-600">Password</label>
                     <a href="#" class="text-xs text-purple-400 hover:text-purple-300 transition-colors">Forgot password?</a>
                 </div>
-                <input type="password" id="loginPassword" required class="w-full bg-slate-800/50 border border-slate-700 rounded-xl px-4 py-3 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all" placeholder="••••••••">
+                <input type="password" id="loginPassword" required class="w-full bg-white border border-slate-200 shadow-sm border border-slate-200 rounded-xl px-4 py-3 text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all" placeholder="••••••••">
             </div>
 
             <div class="pt-4">
-                <button type="submit" id="loginBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-purple-500/25 flex justify-center items-center gap-2">
+                <button type="submit" id="loginBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-slate-800 font-bold py-3.5 rounded-xl transition-all shadow-lg shadow-purple-500/25 flex justify-center items-center gap-2">
                     Sign In
                 </button>
             </div>
@@ -54,7 +54,7 @@
 
         </form>
 
-        <p class="mt-8 text-center text-sm text-slate-400">
+        <p class="mt-8 text-center text-sm text-slate-500">
             Don't have an account? <a href="register.html" class="text-purple-400 hover:text-purple-300 font-semibold transition-colors">Register here</a>
         </p>
 
