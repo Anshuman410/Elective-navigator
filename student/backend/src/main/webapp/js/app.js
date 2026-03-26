@@ -37,7 +37,7 @@ async function handleRegister(e) {
         const data = await response.json();
 
         if (response.ok && data.success) {
-            msgBox.className = 'md:col-span-2 p-4 rounded-xl text-sm font-medium text-center bg-teal-100 text-teal-700 text-teal-600 border border-teal-200';
+            msgBox.className = 'md:col-span-2 p-4 rounded-xl text-sm font-medium text-center bg-teal-100 text-teal-600 border border-teal-200';
             msgBox.textContent = 'Registration successful! Redirecting to login...';
             msgBox.classList.remove('hidden');
             
@@ -85,7 +85,7 @@ async function handleLogin(e) {
         if (response.ok && data.success) {
             localStorage.setItem('studentData', JSON.stringify(data.data));
             
-            msgBox.className = 'p-4 rounded-xl text-sm font-medium text-center bg-teal-100 text-teal-700 text-teal-600 border border-teal-200';
+            msgBox.className = 'p-4 rounded-xl text-sm font-medium text-center bg-teal-100 text-teal-600 border border-teal-200';
             msgBox.textContent = 'Login successful! Redirecting...';
             msgBox.classList.remove('hidden');
             
@@ -212,7 +212,7 @@ function renderElectivesGrid() {
     if (currentAnalysis) {
         const msg = document.createElement('div');
         msg.id = 'analysisMsgBox';
-        msg.className = "bg-white/90 shadow-sm backdrop-blur-md border border-indigo-200 p-6 rounded-2xl mb-8 mx-auto max-w-4xl shadow-lg";
+        msg.className = "bg-gradient-to-br from-indigo-50 to-white border border-indigo-200 shadow-md p-6 rounded-2xl mb-8 mx-auto max-w-4xl shadow-lg";
         
         let analysisHtml = `<h3 class="text-2xl font-bold text-slate-800 mb-4 text-center">Your Analytical Priority Report</h3>`;
         analysisHtml += `<p class="text-slate-600 mb-6 text-center text-sm md:text-base">Based on your quiz performance, we've analytically ranked your dominant traits. The subjects below are prioritized accordingly.</p>`;
@@ -222,7 +222,7 @@ function renderElectivesGrid() {
             if (cat.score > 0) {
                 analysisHtml += `
                     <div class="flex items-start gap-4 p-4 rounded-xl ${index === 0 ? 'bg-indigo-100 text-indigo-700 border border-indigo-200' : 'bg-slate-50/50 border border-slate-200'}">
-                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-700 text-indigo-600 font-bold flex items-center justify-center shrink-0 border border-indigo-200">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 font-bold flex items-center justify-center shrink-0 border border-indigo-200">
                             ${index + 1}
                         </div>
                         <div>
@@ -253,7 +253,7 @@ function renderElectivesGrid() {
         const isChecked = selectedForCompare.includes(elective.subjectName);
 
         const card = document.createElement('div');
-        let cardClasses = 'bg-white/90 shadow-sm backdrop-blur-md border hover:border-indigo-200 transition-all p-6 rounded-2xl flex flex-col justify-between h-full relative ';
+        let cardClasses = 'bg-white border hover:border-indigo-400 transition-all p-6 rounded-2xl flex flex-col justify-between h-full relative ';
         cardClasses += isTopRecommend ? 'border-indigo-200 shadow-lg shadow-indigo-500/20' : 'border-slate-200';
         card.className = cardClasses;
         
@@ -299,7 +299,7 @@ function renderElectivesGrid() {
                     <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide text-amber-600">${elective.difficulty || 'N/A'}</span>
                 </div>
             </div>
-            <button onclick="finalizeElective('${elective.subjectName}')" class="w-full py-3 bg-white hover:bg-slate-50 border border-slate-200 hover:bg-emerald-600 hover:border-emerald-500 rounded-xl font-semibold transition-colors mt-auto shadow-lg hover:shadow-emerald-500/20 text-slate-800">
+            <button onclick="finalizeElective('${elective.subjectName}')" class="w-full py-3 bg-slate-50 hover:bg-emerald-500 border border-slate-200 hover:border-emerald-500 hover:text-white rounded-xl font-semibold transition-colors mt-auto shadow-lg hover:shadow-emerald-500/20 text-slate-800">
                 Select as Final
             </button>
         `;
@@ -337,7 +337,7 @@ function updateStickyBar() {
     if (selectedForCompare.length >= 2) {
         bar.classList.remove('translate-y-full');
         compareBtn.disabled = false;
-        compareBtn.className = "bg-indigo-600 hover:bg-indigo-500 text-slate-800 px-6 py-2 rounded-lg font-bold transition-colors shadow-lg shadow-indigo-200";
+        compareBtn.className = "bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2 rounded-lg font-bold transition-colors shadow-lg shadow-indigo-200";
     } else if (selectedForCompare.length > 0) {
         bar.classList.remove('translate-y-full');
         compareBtn.disabled = true;
@@ -392,7 +392,7 @@ function openCompareModal() {
                 </div>
             </div>
             
-            <button onclick="finalizeElective('${el.subjectName}')" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold text-slate-800 transition-colors mt-auto shadow-lg shadow-emerald-500/20">
+            <button onclick="finalizeElective('${el.subjectName}')" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 rounded-xl font-bold text-white transition-colors mt-auto shadow-lg shadow-emerald-500/20">
                 Finalize ${el.subjectName}
             </button>
         `;
@@ -606,7 +606,7 @@ function showQueryMsg(message, type) {
     const msgBox = document.getElementById('queryMsg');
     msgBox.classList.remove('hidden');
     msgBox.className = type === 'success' 
-        ? 'mt-4 p-3 rounded-lg text-sm font-medium bg-teal-100 text-teal-700 text-teal-600 border border-teal-200'
+        ? 'mt-4 p-3 rounded-lg text-sm font-medium bg-teal-100 text-teal-600 border border-teal-200'
         : 'mt-4 p-3 rounded-lg text-sm font-medium bg-red-500/20 text-red-400 border border-red-500/30';
     msgBox.textContent = message;
     setTimeout(() => { msgBox.classList.add('hidden'); }, 5000);
@@ -629,10 +629,10 @@ async function loadQueries(studentData) {
         if (response.ok && data.success && data.data && data.data.length > 0) {
             data.data.forEach(q => {
                 const card = document.createElement('div');
-                card.className = 'bg-white border border-slate-200 shadow-sm border border-slate-200 p-5 rounded-2xl';
+                card.className = 'bg-white border border-slate-200 shadow-sm p-5 rounded-2xl';
                 const statusBadge = q.resolved 
-                    ? `<span class="bg-teal-100 text-teal-700 text-teal-600 text-xs font-bold px-2 py-1 rounded-md border border-teal-200">Answered</span>`
-                    : `<span class="bg-amber-100 text-amber-700 text-amber-600 text-xs font-bold px-2 py-1 rounded-md border border-amber-500/30">Pending</span>`;
+                    ? `<span class="bg-teal-100 text-teal-600 text-xs font-bold px-2 py-1 rounded-md border border-teal-200">Answered</span>`
+                    : `<span class="bg-amber-100 text-amber-600 text-xs font-bold px-2 py-1 rounded-md border border-amber-500/30">Pending</span>`;
 
                 let answerSection = '';
                 if (q.resolved && q.answer) {
