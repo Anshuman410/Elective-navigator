@@ -158,7 +158,6 @@ function renderPostSelectionView(subjectName) {
     document.getElementById('finalElectiveName').textContent = subjectName;
 
     const studentData = JSON.parse(localStorage.getItem('studentData'));
-    document.getElementById('finalElectiveSem').textContent = studentData.semester;
     
     fetch(`${API_BASE_URL}/api/electives?semester=${studentData.semester}`)
         .then(res => res.json())
@@ -168,18 +167,17 @@ function renderPostSelectionView(subjectName) {
                 if (el) {
                     document.getElementById('finalElectiveTeacher').textContent = el.teacher || '---';
                     document.getElementById('finalElectiveCategory').textContent = el.category || '---';
-                    document.getElementById('finalElectiveDiff').textContent = el.difficulty || '---';
                     
                     // Add Subject ID and Syllabus to post selection view if elements exist
                     const idSpan = document.createElement('span');
-                    idSpan.className = 'text-xs text-indigo-500 font-bold block mt-2 opacity-70';
-                    idSpan.textContent = `CODE: ${el.subjectId || 'N/A'}`;
+                    idSpan.className = 'text-xs text-indigo-400 font-black block mt-4 uppercase tracking-[0.2em] opacity-60';
+                    idSpan.textContent = `Registry ID: ${el.subjectId || 'N/A'}`;
                     document.getElementById('finalElectiveName').parentNode.insertBefore(idSpan, document.getElementById('finalElectiveName').nextSibling);
 
                     if (el.syllabus) {
                         const sylBtn = document.createElement('button');
-                        sylBtn.className = 'mt-4 bg-white/20 hover:bg-white/30 text-slate-800 text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all border border-white/20';
-                        sylBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Download Syllabus`;
+                        sylBtn.className = 'mt-10 bg-white/5 hover:bg-white/10 text-white text-xs font-black py-4 px-8 rounded-2xl flex items-center gap-3 transition-all border border-white/10 group';
+                        sylBtn.innerHTML = `<svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Repository Syllabus`;
                         sylBtn.onclick = () => downloadPDF(el.syllabus, el.subjectName);
                         document.getElementById('finalElectiveName').parentNode.appendChild(sylBtn);
                     }
@@ -226,23 +224,23 @@ function renderElectivesGrid() {
     if (currentAnalysis) {
         const msg = document.createElement('div');
         msg.id = 'analysisMsgBox';
-        msg.className = "bg-gradient-to-br from-indigo-50 to-white border border-indigo-200 shadow-md p-6 rounded-2xl mb-8 mx-auto max-w-4xl shadow-lg";
+        msg.className = "glass-card p-10 rounded-[3rem] mb-12 relative overflow-hidden bg-gradient-to-br from-indigo-500/10 to-transparent";
         
-        let analysisHtml = `<h3 class="text-2xl font-bold text-slate-800 mb-4 text-center">Your Analytical Priority Report</h3>`;
-        analysisHtml += `<p class="text-slate-600 mb-6 text-center text-sm md:text-base">Based on your quiz performance, we've analytically ranked your dominant traits. The subjects below are prioritized accordingly.</p>`;
+        let analysisHtml = `<h3 class="text-3xl font-black text-white mb-6 text-center tracking-tight">Analytical Priority Report</h3>`;
+        analysisHtml += `<p class="text-slate-400 mb-10 text-center font-medium">Synthesized based on your categorical responses and behavioral quiz results.</p>`;
         
-        analysisHtml += `<div class="space-y-4">`;
+        analysisHtml += `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
         currentAnalysis.forEach((cat, index) => {
             if (cat.score > 0) {
                 analysisHtml += `
-                    <div class="flex items-start gap-4 p-4 rounded-xl ${index === 0 ? 'bg-indigo-100 text-indigo-700 border border-indigo-200' : 'bg-slate-50/50 border border-slate-200'}">
-                        <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 font-bold flex items-center justify-center shrink-0 border border-indigo-200">
-                            ${index + 1}
+                    <div class="p-6 rounded-3xl ${index === 0 ? 'bg-indigo-500/20 border border-indigo-500/30' : 'bg-white/5 border border-white/5'}">
+                        <div class="flex items-center gap-4 mb-3">
+                            <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 font-black flex items-center justify-center text-xs border border-indigo-500/30">
+                                ${index + 1}
+                            </div>
+                            <h4 class="text-white font-extrabold text-lg tracking-tight">${cat.trait}</h4>
                         </div>
-                        <div>
-                            <h4 class="text-slate-800 font-bold text-lg mb-1">${cat.trait} <span class="text-xs text-slate-500 font-normal ml-2">(Score: ${cat.score})</span></h4>
-                            <p class="text-slate-500 text-sm leading-relaxed">${cat.reason} ${index === 0 ? '<strong class="text-indigo-600">This trait defines your top priority.</strong>' : ''}</p>
-                        </div>
+                        <p class="text-slate-400 text-sm leading-relaxed font-medium">${cat.reason}</p>
                     </div>
                 `;
             }
@@ -267,65 +265,68 @@ function renderElectivesGrid() {
         const isChecked = selectedForCompare.includes(elective.subjectName);
 
         const card = document.createElement('div');
-        let cardClasses = 'bg-white border hover:border-indigo-400 transition-all p-6 rounded-2xl flex flex-col justify-between h-full relative ';
-        cardClasses += isTopRecommend ? 'border-indigo-200 shadow-lg shadow-indigo-500/20' : 'border-slate-200';
+        let cardClasses = 'glass-card p-8 rounded-[2.5rem] flex flex-col h-full relative group ';
+        if (isTopRecommend) cardClasses += 'border-indigo-500/50 bg-indigo-500/5 shadow-[0_20px_40px_rgba(99,102,241,0.1)]';
         card.className = cardClasses;
         
         let badgeHtml = '';
         if (currentAnalysis) {
-            if (isTopRecommend) {
-                badgeHtml = `<span class="absolute -top-3 left-6 bg-indigo-500 text-slate-800 text-[10px] font-bold px-3 py-1 rounded-full shadow-lg border border-indigo-400">Priority #${idx + 1} • Top Match</span>`;
-            } else {
-                badgeHtml = `<span class="absolute -top-3 left-6 bg-slate-700 text-slate-700 text-[10px] font-bold px-3 py-1 rounded-full shadow-lg border border-slate-300">Priority #${idx + 1}</span>`;
-            }
+            badgeHtml = `<span class="absolute -top-3 left-8 ${isTopRecommend ? 'bg-indigo-500' : 'bg-slate-800'} text-white text-[10px] font-black px-4 py-1.5 rounded-full shadow-xl z-10 tracking-widest uppercase italic">Ranked #${idx + 1}</span>`;
         }
 
         let reasonHtml = '';
         if (currentAnalysis) {
             reasonHtml = `
-                <div class="bg-slate-50/50 border border-slate-200 rounded-lg p-3 mb-4">
-                    <p class="text-xs text-slate-500 mb-1 font-semibold uppercase tracking-wider">Why Priority #${idx + 1}?</p>
-                    <p class="text-xs text-slate-600 leading-relaxed">Matches your <span class="text-indigo-600 font-bold">${elective.mappedTrait}</span> trait. ${elective.reason}</p>
+                <div class="bg-indigo-500/5 border border-indigo-500/20 rounded-2xl p-4 mb-6">
+                    <p class="text-[9px] text-indigo-400 mb-1 font-black uppercase tracking-[0.2em]">Match Logic</p>
+                    <p class="text-xs text-slate-400 leading-relaxed font-medium">Aligned with <span class="text-white font-bold">${elective.mappedTrait}</span> path.</p>
                 </div>
             `;
         }
 
         card.innerHTML = `
             ${badgeHtml}
-            <div>
-                <div class="flex justify-between items-start mb-4 mt-2">
-                    <div class="w-12 h-12 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl flex items-center justify-center text-indigo-600 border border-indigo-200">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
-                    </div>
-                    <label class="flex items-center gap-2 cursor-pointer bg-slate-50/50 px-3 py-1.5 rounded-lg border border-slate-200 hover:border-indigo-400 transition-colors">
-                        <input type="checkbox" class="w-4 h-4 rounded text-indigo-500 focus:ring-indigo-500 focus:ring-offset-slate-900 bg-white border-slate-300" ${isChecked ? 'checked' : ''} onchange="toggleCompare('${elective.subjectName}', this.checked)">
-                        <span class="text-xs font-semibold text-slate-600">Compare</span>
-                    </label>
+            <div class="flex justify-between items-start mb-8">
+                <div class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                 </div>
-                <h3 class="text-xl font-bold text-slate-800 mb-1">${elective.subjectName}</h3>
-                <p class="text-[10px] text-indigo-600 font-bold mb-2 tracking-wider">${elective.subjectId || 'CODE-N/A'}</p>
-                <p class="text-slate-500 text-sm flex items-center gap-2 mb-3">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                <label class="flex items-center gap-3 cursor-pointer bg-white/5 px-4 py-2 rounded-xl border border-white/5 hover:border-indigo-500/50 transition-all">
+                    <input type="checkbox" class="w-4 h-4 rounded-lg text-indigo-500 bg-white/5 border-white/10 focus:ring-indigo-500 focus:ring-offset-0" ${isChecked ? 'checked' : ''} onchange="toggleCompare('${elective.subjectName}', this.checked)">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Compare</span>
+                </label>
+            </div>
+
+            <div class="mb-4">
+                <h3 class="text-2xl font-black text-white tracking-tight mb-1">${elective.subjectName}</h3>
+                <p class="text-[10px] text-indigo-400 font-black uppercase tracking-[0.2em] mb-4">${elective.subjectId || 'REGO-N/A'}</p>
+                <div class="flex items-center gap-2 text-slate-400 text-sm font-semibold mb-6">
+                    <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </div>
                     Prof. ${elective.teacher}
-                </p>
-                ${reasonHtml}
-                <div class="mt-4 flex flex-wrap gap-2 mb-6">
-                    <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide">${elective.category || 'N/A'}</span>
-                    <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide text-amber-600">${elective.difficulty || 'N/A'}</span>
-                    ${elective.syllabus ? `<button onclick="downloadPDF('${elective.syllabus}', '${elective.subjectName}')" class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide border border-indigo-100 flex items-center gap-1 hover:bg-indigo-600 hover:text-white transition-colors">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        Syllabus PDF
-                    </button>` : ''}
                 </div>
             </div>
-            <button onclick="finalizeElective('${elective.subjectName}')" class="w-full py-3 bg-slate-50 hover:bg-emerald-500 border border-slate-200 hover:border-emerald-500 hover:text-white rounded-xl font-semibold transition-colors mt-auto shadow-lg hover:shadow-emerald-500/20 text-slate-800">
-                Select as Final
+
+            ${reasonHtml}
+
+            <div class="flex flex-wrap gap-3 mb-10">
+                <span class="px-3 py-1 rounded-lg bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest text-slate-400">${elective.category || 'N/A'}</span>
+                <span class="px-3 py-1 rounded-lg bg-orange-500/10 border border-orange-500/20 text-[9px] font-black uppercase tracking-widest text-orange-400">${elective.difficulty || 'N/A'}</span>
+                ${elective.syllabus ? `<button onclick="downloadPDF('${elective.syllabus}', '${elective.subjectName}')" class="px-3 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-[9px] font-black uppercase tracking-widest text-indigo-400 flex items-center gap-2 hover:bg-indigo-500 hover:text-white transition-all">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    PDF
+                </button>` : ''}
+            </div>
+
+            <button onclick="finalizeElective('${elective.subjectName}')" class="w-full py-4 rounded-2xl bg-white/5 hover:bg-white text-slate-400 hover:text-black font-black text-sm uppercase tracking-widest border border-white/10 hover:border-white transition-all mt-auto group">
+                Finalize Registry
             </button>
         `;
         
         grid.appendChild(card);
     });
 }
+
 
 // ----------------- COMPARE LOGIC -----------------
 
@@ -449,19 +450,19 @@ function openQuizModal() {
         let optionsHtml = '';
         for (const [key, val] of Object.entries(item.options)) {
             optionsHtml += `
-                <label class="flex items-center gap-3 p-3 border border-slate-200 rounded-xl cursor-pointer hover:bg-white transition-colors">
-                    <input type="radio" name="q${index}" value="${key}" class="w-4 h-4 text-indigo-500 bg-slate-50 border-slate-300 focus:ring-indigo-500">
-                    <span class="text-slate-600 font-medium">${key}. ${val}</span>
+                <label class="flex items-center gap-4 p-5 rounded-2xl border border-white/5 bg-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5 cursor-pointer transition-all group">
+                    <input type="radio" name="q${index}" value="${key}" class="w-5 h-5 text-indigo-500 bg-white/10 border-white/10 focus:ring-indigo-500 focus:ring-offset-0">
+                    <span class="text-slate-400 group-hover:text-white font-bold text-sm tracking-tight">${val}</span>
                 </label>
             `;
         }
         
         container.innerHTML += `
-            <div class="mb-8 last:mb-0">
-                <h4 class="text-lg font-bold text-slate-800 mb-3 flex gap-2">
-                    <span class="text-indigo-600">Q${index + 1}.</span> ${item.q}
+            <div class="mb-12 last:mb-0">
+                <h4 class="text-xl font-black text-white mb-6 flex gap-4">
+                    <span class="text-indigo-500">Q${index + 1}.</span> ${item.q}
                 </h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 pl-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     ${optionsHtml}
                 </div>
             </div>
@@ -648,27 +649,28 @@ async function loadQueries(studentData) {
         if (response.ok && data.success && data.data && data.data.length > 0) {
             data.data.forEach(q => {
                 const card = document.createElement('div');
-                card.className = 'bg-white border border-slate-200 shadow-sm p-5 rounded-2xl';
+                card.className = 'glass-card p-6 rounded-[2rem] border border-white/5 bg-white/2';
                 const statusBadge = q.resolved 
-                    ? `<span class="bg-teal-100 text-teal-600 text-xs font-bold px-2 py-1 rounded-md border border-teal-200">Answered</span>`
-                    : `<span class="bg-amber-100 text-amber-600 text-xs font-bold px-2 py-1 rounded-md border border-amber-500/30">Pending</span>`;
+                    ? `<span class="bg-teal-500/10 text-teal-400 text-[10px] font-black px-3 py-1 rounded-full border border-teal-500/20 uppercase tracking-widest">Answered</span>`
+                    : `<span class="bg-amber-500/10 text-amber-400 text-[10px] font-black px-3 py-1 rounded-full border border-amber-500/20 uppercase tracking-widest">Pending Review</span>`;
 
                 let answerSection = '';
                 if (q.resolved && q.answer) {
                     answerSection = `
-                        <div class="mt-4 p-4 bg-indigo-500/10 border border-indigo-200 rounded-xl">
-                            <p class="text-xs text-indigo-600 font-bold uppercase tracking-wider mb-1">Admin's Answer</p>
-                            <p class="text-slate-800">${q.answer}</p>
+                        <div class="mt-6 p-6 bg-indigo-500/10 border border-indigo-500/20 rounded-2xl relative overflow-hidden">
+                            <div class="absolute top-0 left-0 w-1 h-full bg-indigo-500"></div>
+                            <p class="text-[10px] text-indigo-400 font-black uppercase tracking-[0.2em] mb-3">Administrator Verdict</p>
+                            <p class="text-white font-medium leading-relaxed">${q.answer}</p>
                         </div>
                     `;
                 }
 
                 card.innerHTML = `
-                    <div class="flex justify-between items-start mb-2">
-                        <p class="text-slate-500 text-xs">${new Date(q.createdAt).toLocaleDateString()}</p>
+                    <div class="flex justify-between items-start mb-4">
+                        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest">${new Date(q.createdAt).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                         ${statusBadge}
                     </div>
-                    <p class="text-lg font-medium text-slate-800 break-words">${q.question}</p>
+                    <p class="text-lg font-extrabold text-white tracking-tight break-words">${q.question}</p>
                     ${answerSection}
                 `;
                 grid.appendChild(card);
