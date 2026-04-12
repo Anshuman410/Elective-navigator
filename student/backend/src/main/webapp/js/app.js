@@ -15,15 +15,11 @@ async function handleRegister(e) {
     const msgBox = document.getElementById('messageBox');
     
     submitBtn.disabled = true;
-    submitBtn.innerHTML = 'Registering...';
+    submitBtn.innerHTML = 'Creating Account...';
     
     const payload = {
         name: document.getElementById('name').value,
         studentId: document.getElementById('studentId').value,
-        course: document.getElementById('course').value,
-        semester: document.getElementById('semester').value,
-        universityRollNo: document.getElementById('universityRollNo').value,
-        section: document.getElementById('section').value,
         password: document.getElementById('password').value
     };
 
@@ -37,8 +33,8 @@ async function handleRegister(e) {
         const data = await response.json();
 
         if (response.ok && data.success) {
-            msgBox.className = 'md:col-span-2 p-4 rounded-xl text-sm font-medium text-center bg-teal-100 text-teal-600 border border-teal-200';
-            msgBox.textContent = 'Registration successful! Redirecting to login...';
+            msgBox.className = 'p-4 rounded-xl text-sm font-medium text-center bg-teal-100 text-teal-600 border border-teal-200';
+            msgBox.textContent = 'Account created! Redirecting to login...';
             msgBox.classList.remove('hidden');
             
             setTimeout(() => {
@@ -48,11 +44,11 @@ async function handleRegister(e) {
             throw new Error(data.message || 'Registration failed');
         }
     } catch (error) {
-        msgBox.className = 'md:col-span-2 p-4 rounded-xl text-sm font-medium text-center bg-red-500/20 text-red-400 border border-red-500/30';
+        msgBox.className = 'p-4 rounded-xl text-sm font-medium text-center bg-red-500/20 text-red-400 border border-red-500/30';
         msgBox.textContent = error.message;
         msgBox.classList.remove('hidden');
         submitBtn.disabled = false;
-        submitBtn.innerHTML = 'Register Account';
+        submitBtn.innerHTML = 'Create Account';
     }
 }
 
@@ -86,11 +82,16 @@ async function handleLogin(e) {
             localStorage.setItem('studentData', JSON.stringify(data.data));
             
             msgBox.className = 'p-4 rounded-xl text-sm font-medium text-center bg-teal-100 text-teal-600 border border-teal-200';
-            msgBox.textContent = 'Login successful! Redirecting...';
+            msgBox.textContent = 'Login successful! Verifying profile...';
             msgBox.classList.remove('hidden');
             
             setTimeout(() => {
-                window.location.href = 'dashboard.html';
+                // Check if profile is incomplete (e.g. college is missing)
+                if (!data.data.college || !data.data.branch) {
+                    window.location.href = 'setup-profile.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
             }, 1000);
         } else {
             throw new Error(data.message || 'Login failed');
@@ -101,6 +102,63 @@ async function handleLogin(e) {
         msgBox.classList.remove('hidden');
         submitBtn.disabled = false;
         submitBtn.innerHTML = 'Sign In';
+    }
+}
+
+/**
+ * Handle Profile Update (Comprehensive)
+ */
+async function handleUpdateProfile(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('saveProfileBtn');
+    const msgBox = document.getElementById('setupMessageBox');
+    
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Syncing Identity...';
+
+    const studentData = JSON.parse(localStorage.getItem('studentData'));
+    const payload = {
+        studentId: studentData.studentId,
+        fatherName: document.getElementById('fatherName').value,
+        motherName: document.getElementById('motherName').value,
+        dob: document.getElementById('dob').value,
+        personalEmail: document.getElementById('personalEmail').value,
+        officialEmail: document.getElementById('officialEmail').value,
+        phone: document.getElementById('phone').value,
+        college: document.getElementById('college').value,
+        course: document.getElementById('course').value,
+        branch: document.getElementById('branch').value,
+        specialization: document.getElementById('specialization').value,
+        semester: document.getElementById('semester').value,
+        section: document.getElementById('section').value,
+        classRollNo: document.getElementById('classRollNo').value,
+        enrollNo: document.getElementById('enrollNo').value,
+        universityRollNo: document.getElementById('universityRollNo').value
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/update-profile`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+        if (response.ok && data.success) {
+            localStorage.setItem('studentData', JSON.stringify(data.data));
+            msgBox.className = 'lg:col-span-3 p-4 rounded-xl text-sm font-medium text-center bg-teal-100 text-teal-600 border border-teal-200';
+            msgBox.textContent = 'Identity Synced! Launching Dashboard...';
+            msgBox.classList.remove('hidden');
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+        } else {
+            throw new Error(data.message || 'Update failed');
+        }
+    } catch (error) {
+        msgBox.className = 'lg:col-span-3 p-4 rounded-xl text-sm font-medium text-center bg-red-500/20 text-red-400 border border-red-500/30';
+        msgBox.textContent = error.message;
+        msgBox.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Finalize Clinical Identity';
     }
 }
 
@@ -116,13 +174,43 @@ async function loadDashboard() {
 
     const studentData = JSON.parse(studentDataStr);
     
+    // Redirect if profile still incomplete
+    if (!studentData.college || !studentData.fatherName) {
+        window.location.href = 'setup-profile.html';
+        return;
+    }
+
     document.getElementById('dashName').textContent = studentData.name;
-    document.getElementById('dashStudentId').textContent = studentData.studentId;
-    document.getElementById('dashCourse').textContent = studentData.course;
-    document.getElementById('dashSemester').textContent = 'Sem ' + studentData.semester;
     document.getElementById('displaySemTitle').textContent = studentData.semester;
-    document.getElementById('dashRollNo').textContent = studentData.universityRollNo;
-    document.getElementById('dashSection').textContent = 'Sec ' + studentData.section;
+
+    // Render Vertical Matrix
+    const matrix = document.getElementById('profileMatrix');
+    const fields = [
+        { label: "Father Name", key: "fatherName" },
+        { label: "Mother Name", key: "motherName" },
+        { label: "D.O.B.", key: "dob" },
+        { label: "Personal Email", key: "personalEmail" },
+        { label: "Official Email", key: "officialEmail" },
+        { label: "Phone", key: "phone" },
+        { label: "College", key: "college" },
+        { label: "Course", key: "course" },
+        { label: "Branch", key: "branch" },
+        { label: "Specialization", key: "specialization" },
+        { label: "Year/Sem", key: "semester", format: (v) => v ? 'Sem ' + v : '---' },
+        { label: "Section", key: "section" },
+        { label: "Class Roll No.", key: "classRollNo" },
+        { label: "Enroll No.", key: "enrollNo" },
+        { label: "University Roll No.", key: "universityRollNo" }
+    ];
+
+    matrix.innerHTML = fields.map(f => `
+        <div class="flex items-center justify-between py-5 border-b border-white/5 hover:bg-white/[0.01] transition-colors px-4 rounded-xl group">
+            <span class="text-xs font-black text-slate-500 uppercase tracking-widest">${f.label}</span>
+            <span class="text-sm font-bold text-white tracking-tight group-hover:text-indigo-400 transition-colors">
+                ${f.format ? f.format(studentData[f.key]) : (studentData[f.key] || '---')}
+            </span>
+        </div>
+    `).join('');
 
     // View State Management
     if (studentData.selectedElective && studentData.selectedElective.trim() !== '') {

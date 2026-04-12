@@ -33,6 +33,8 @@ public class StudentAuthServlet extends HttpServlet {
                 handleRegister(request, response);
             } else if ("/login".equals(pathInfo)) {
                 handleLogin(request, response);
+            } else if ("/update-profile".equals(pathInfo)) {
+                handleUpdateProfile(request, response);
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write(gson.toJson(new ApiResponse(false, "Endpoint not found")));
@@ -48,10 +50,6 @@ public class StudentAuthServlet extends HttpServlet {
 
         String name = jsonBody.get("name").getAsString();
         String studentId = jsonBody.get("studentId").getAsString();
-        String course = jsonBody.get("course").getAsString();
-        String semester = jsonBody.get("semester").getAsString();
-        String universityRollNo = jsonBody.get("universityRollNo").getAsString();
-        String section = jsonBody.get("section").getAsString();
         String password = jsonBody.get("password").getAsString();
 
         MongoDatabase db = MongoDBConnection.getDatabase();
@@ -67,16 +65,55 @@ public class StudentAuthServlet extends HttpServlet {
 
         Document newStudent = new Document("name", name)
                 .append("studentId", studentId)
-                .append("course", course)
-                .append("semester", semester)
-                .append("universityRollNo", universityRollNo)
-                .append("section", section)
-                .append("password", password); // Note: Simple text password as requested, but in prod hash it!
+                .append("password", password); // Simple text as requested
 
         collection.insertOne(newStudent);
 
         response.setStatus(HttpServletResponse.SC_CREATED);
         response.getWriter().write(gson.toJson(new ApiResponse(true, "Registration successful.")));
+    }
+
+    private void handleUpdateProfile(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        JsonObject jsonBody = getJsonBody(request);
+        String studentId = jsonBody.get("studentId").getAsString();
+
+        MongoDatabase db = MongoDBConnection.getDatabase();
+        MongoCollection<Document> collection = db.getCollection("students");
+
+        Document updateFields = new Document();
+        String[] fields = {
+            "name", "fatherName", "motherName", "dob", "personalEmail", 
+            "officialEmail", "phone", "college", "course", "branch", 
+            "specialization", "semester", "section", "classRollNo", 
+            "enrollNo", "universityRollNo"
+        };
+
+        for (String field : fields) {
+            if (jsonBody.has(field) && !jsonBody.get(field).isJsonNull()) {
+                updateFields.append(field, jsonBody.get(field).getAsString());
+            }
+        }
+
+        Document updateDoc = new Document("$set", updateFields);
+        collection.updateOne(new Document("studentId", studentId), updateDoc);
+
+        // Fetch the updated student data to return it
+        Document updatedStudent = collection.find(new Document("studentId", studentId)).first();
+        if (updatedStudent != null) {
+            updatedStudent.remove("password");
+            updatedStudent.remove("_id");
+            
+            JsonObject result = new JsonObject();
+            result.addProperty("success", true);
+            result.addProperty("message", "Profile updated successfully");
+            result.add("data", gson.fromJson(updatedStudent.toJson(), JsonObject.class));
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(gson.toJson(result));
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write(gson.toJson(new ApiResponse(false, "Student not found.")));
+        }
     }
 
     private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {

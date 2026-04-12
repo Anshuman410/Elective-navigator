@@ -79,60 +79,30 @@
                 <p class="text-slate-400 font-medium">Join the elite network of students optimizing their future.</p>
             </div>
 
-            <form id="registerForm" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <form id="registerForm" class="space-y-8">
                 
                 <div class="space-y-2">
                     <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
-                    <input type="text" id="name" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600" placeholder="John Doe">
+                    <input type="text" id="name" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none" placeholder="Enter your full name">
                 </div>
 
                 <div class="space-y-2">
                     <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Student ID</label>
-                    <input type="text" id="studentId" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600" placeholder="STU101">
+                    <input type="text" id="studentId" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none" placeholder="Enter your Student ID">
                 </div>
 
                 <div class="space-y-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Course</label>
-                    <input type="text" id="course" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600" placeholder="B.Tech CSE">
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Semester</label>
-                    <select id="semester" required class="w-full rounded-2xl px-5 py-4 cursor-pointer appearance-none">
-                        <option value="" disabled selected class="bg-[#050505]">Select Semester</option>
-                        <option value="1" class="bg-[#050505]">1st Semester</option>
-                        <option value="2" class="bg-[#050505]">2nd Semester</option>
-                        <option value="3" class="bg-[#050505]">3rd Semester</option>
-                        <option value="4" class="bg-[#050505]">4th Semester</option>
-                        <option value="5" class="bg-[#050505]">5th Semester</option>
-                        <option value="6" class="bg-[#050505]">6th Semester</option>
-                        <option value="7" class="bg-[#050505]">7th Semester</option>
-                        <option value="8" class="bg-[#050505]">8th Semester</option>
-                    </select>
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">University Roll No</label>
-                    <input type="text" id="universityRollNo" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600" placeholder="200101001">
-                </div>
-
-                <div class="space-y-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Section</label>
-                    <input type="text" id="section" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600" placeholder="Section A">
-                </div>
-
-                <div class="space-y-2 md:col-span-2">
                     <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Secure Password</label>
-                    <input type="password" id="password" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600" placeholder="••••••••">
+                    <input type="password" id="password" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none" placeholder="••••••••">
                 </div>
 
-                <div class="md:col-span-2 pt-6">
+                <div class="pt-6">
                     <button type="submit" id="submitBtn" class="btn-premium w-full py-5 rounded-2xl text-white font-black text-lg shadow-xl shadow-indigo-500/20">
-                        Create Academic Profile
+                        Create Account
                     </button>
                 </div>
                 
-                <div id="messageBox" class="md:col-span-2 hidden p-4 rounded-2xl text-sm font-bold text-center border"></div>
+                <div id="messageBox" class="hidden p-4 rounded-2xl text-sm font-bold text-center border"></div>
             </form>
 
             <p class="mt-12 text-center text-slate-500 text-sm font-medium">
