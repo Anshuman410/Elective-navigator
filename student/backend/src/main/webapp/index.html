@@ -8,46 +8,48 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-obsidian: #050505;
-            --accent-indigo: #6366f1;
-            --accent-purple: #a855f7;
-            --accent-rose: #f43f5e;
-            --glass-white: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --bg-arctic: #f8fafc;
+            --accent-indigo: #4338ca; /* Darker indigo for readability */
+            --accent-purple: #7c3aed;
+            --accent-rose: #e11d48;
+            --glass-white: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(99, 102, 241, 0.15);
+            --text-main: #0f172a;
+            --text-muted: #475569;
         }
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-obsidian);
-            color: #e2e8f0;
+            background-color: var(--bg-arctic);
+            color: var(--text-main);
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
 
         /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-obsidian); }
+        ::-webkit-scrollbar-track { background: var(--bg-arctic); }
         ::-webkit-scrollbar-thumb { 
             background: linear-gradient(to bottom, var(--accent-indigo), var(--accent-purple)); 
             border-radius: 10px;
         }
 
-        /* Gradient Mesh Animation */
+        /* Gradient Mesh Animation (Softened for Light Mode) */
         .mesh-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            filter: blur(100px);
-            opacity: 0.6;
-            background: radial-gradient(circle at 20% 30%, var(--accent-indigo) 0%, transparent 40%),
-                        radial-gradient(circle at 80% 70%, var(--accent-purple) 0%, transparent 40%),
-                        radial-gradient(circle at 50% 50%, var(--accent-rose) 0%, transparent 30%);
+            filter: blur(120px);
+            opacity: 0.2;
+            background: radial-gradient(circle at 20% 30%, #6366f1 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, #a855f7 0%, transparent 40%),
+                        radial-gradient(circle at 50% 50%, #f43f5e 0%, transparent 30%);
             animation: meshMove 20s infinite alternate ease-in-out;
         }
 
         @keyframes meshMove {
             0% { transform: scale(1) translate(0, 0); }
-            50% { transform: scale(1.2) translate(5%, 5%); }
+            50% { transform: scale(1.1) translate(5%, 5%); }
             100% { transform: scale(1) translate(-5%, -5%); }
         }
 
@@ -55,8 +57,8 @@
         .reveal-text {
             opacity: 0;
             transform: translateY(30px);
-            filter: blur(10px);
-            transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: blur(5px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .reveal-text.active {
@@ -65,12 +67,13 @@
             filter: blur(0);
         }
 
-        /* Spotlight Effect for Cards */
+        /* Spotlight Effect for Cards (Inverted for Light Mode) */
         .spotlight-card {
             position: relative;
-            background: var(--glass-white);
+            background: rgba(255, 255, 255, 0.8);
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
             transition: all 0.4s ease;
             overflow: hidden;
         }
@@ -79,20 +82,20 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.08), transparent 40%);
+            background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y), rgba(99, 102, 241, 0.05), transparent 40%);
             opacity: 0;
             transition: opacity 0.5s;
         }
 
         .spotlight-card:hover::before { opacity: 1; }
-        .spotlight-card:hover { border-color: rgba(255, 255, 255, 0.2); transform: translateY(-5px); }
+        .spotlight-card:hover { border-color: rgba(99, 102, 241, 0.3); transform: translateY(-5px); box-shadow: 0 20px 40px -10px rgba(99, 102, 241, 0.1); }
 
-        /* Cursor Glow */
+        /* Cursor Glow (Indigo Glow) */
         #cursor-glow {
             position: fixed;
             width: 400px;
             height: 400px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
             z-index: 100;
@@ -102,67 +105,65 @@
 
         .btn-premium {
             background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .btn-premium:hover {
             transform: scale(1.05) translateY(-2px);
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
         }
 
         .glass-nav {
-            background: rgba(5, 5, 5, 0.7);
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--glass-border);
         }
+
+        .typewriter-cursor {
+            border-right: 2px solid var(--accent-indigo);
+            animation: blink 0.7s infinite;
+        }
+        @keyframes blink { 50% { border-color: transparent } }
     </style>
 </head>
-<body class="selection:bg-indigo-500/30">
+<body class="selection:bg-indigo-500/20 text-slate-900">
 
     <div id="cursor-glow"></div>
     <div class="mesh-bg"></div>
 
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-[100] transition-all duration-500 glass-nav py-5 px-8 flex justify-between items-center">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-3">
             <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
                 <span class="font-black text-white text-xl">E</span>
             </div>
-            <span class="text-xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
-                Navigator
+            <span class="text-xl font-bold tracking-tight text-indigo-950">
+                Elective Navigator
             </span>
         </div>
         <div class="hide-mobile flex items-center gap-10">
-            <a href="#features" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Features</a>
-            <a href="login.html" class="text-sm font-medium text-slate-400 hover:text-white transition-colors">Login</a>
+            <a href="#features" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Features</a>
+            <a href="login.html" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Login</a>
             <a href="register.html" class="btn-premium px-8 py-3 rounded-xl text-sm font-bold text-white">Get Started</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <section class="relative min-h-screen flex flex-col items-center justify-center pt-24 px-6 text-center">
-        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-7xl animate-pulse opacity-20 -z-10">
-            <div class="h-px bg-gradient-to-r from-transparent via-indigo-500 to-transparent"></div>
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-7xl animate-pulse opacity-10 -z-10">
+            <div class="h-px bg-gradient-to-r from-transparent via-indigo-600 to-transparent"></div>
         </div>
 
         <div class="space-y-8 max-w-4xl relative z-10">
-            <div class="reveal-text inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-[0.2em] text-indigo-400">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                </span>
-                Standardizing Excellence
-            </div>
-
-            <h1 class="reveal-text text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter">
+            <h1 class="reveal-text text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter text-slate-900">
                 Architect Your <br>
-                <span class="italic bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-500 to-rose-500">
+                <span class="italic bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-600 to-rose-500" id="typewriter">
                     Academic Future
-                </span>
+                </span><span class="typewriter-cursor"></span>
             </h1>
 
-            <p class="reveal-text text-lg md:text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
+            <p class="reveal-text text-lg md:text-xl text-slate-600 max-w-2xl mx-auto font-semibold leading-relaxed">
                 Streamlining the elective selection process with data-driven insights and a precision-engineered student dashboard.
             </p>
 
@@ -171,64 +172,59 @@
                     Launch Dashboard
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
                 </a>
-                <button onclick="document.getElementById('features').scrollIntoView()" class="px-12 py-5 border border-white/10 hover:bg-white/5 rounded-2xl text-lg font-bold text-slate-300 transition-all">
+                <button onclick="document.getElementById('features').scrollIntoView()" class="px-12 py-5 border border-indigo-600/10 hover:bg-indigo-500/5 rounded-2xl text-lg font-bold text-slate-700 transition-all">
                     Explore Platform
                 </button>
             </div>
-        </div>
-        
-        <!-- Scrolling Indicator -->
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-40">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
         </div>
     </section>
 
     <!-- Features Section -->
     <section id="features" class="py-40 px-6 max-w-7xl mx-auto">
         <div class="mb-24 text-center space-y-4">
-            <h2 class="text-4xl md:text-6xl font-black">Next-Gen Management</h2>
-            <p class="text-slate-500 text-lg">Powerful features built for the modern student experience.</p>
+            <h2 class="text-4xl md:text-6xl font-black text-slate-900">Next-Gen Management</h2>
+            <p class="text-slate-500 text-lg font-medium">Powerful features built for the modern student experience.</p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
             <!-- Card 1 -->
             <div class="spotlight-card p-10 rounded-[2.5rem] group">
-                <div class="w-16 h-16 bg-indigo-500/10 text-indigo-400 rounded-2xl flex items-center justify-center mb-8 border border-indigo-500/20 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-500">
+                <div class="w-16 h-16 bg-indigo-500/10 text-indigo-400 rounded-2xl flex items-center justify-center mb-8 border border-indigo-500/20 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <h3 class="text-2xl font-extrabold mb-4">Precision Selection</h3>
-                <p class="text-slate-400 font-medium leading-relaxed">Advanced algorithms to match your skills with the most relevant academic electives available.</p>
+                <h3 class="text-2xl font-black text-slate-900 mb-4">Precision Selection</h3>
+                <p class="text-slate-600 font-medium leading-relaxed">Advanced algorithms to match your skills with the most relevant academic electives available.</p>
             </div>
 
             <!-- Card 2 -->
             <div class="spotlight-card p-10 rounded-[2.5rem] group">
-                <div class="w-16 h-16 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center mb-8 border border-purple-500/20 group-hover:bg-purple-500 group-hover:text-white transition-all duration-500">
+                <div class="w-16 h-16 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center mb-8 border border-purple-500/20 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 </div>
-                <h3 class="text-2xl font-extrabold mb-4">Unified Syllabus</h3>
-                <p class="text-slate-400 font-medium leading-relaxed">Instant access to comprehensive course documents and PDFs in a single, high-speed interface.</p>
+                <h3 class="text-2xl font-black text-slate-900 mb-4">Unified Syllabus</h3>
+                <p class="text-slate-600 font-medium leading-relaxed">Instant access to comprehensive course documents and PDFs in a single, high-speed interface.</p>
             </div>
 
             <!-- Card 3 -->
             <div class="spotlight-card p-10 rounded-[2.5rem] group">
-                <div class="w-16 h-16 bg-rose-500/10 text-rose-400 rounded-2xl flex items-center justify-center mb-8 border border-rose-500/20 group-hover:bg-rose-500 group-hover:text-white transition-all duration-500">
+                <div class="w-16 h-16 bg-rose-500/10 text-rose-400 rounded-2xl flex items-center justify-center mb-8 border border-rose-500/20 group-hover:bg-rose-600 group-hover:text-white transition-all duration-500">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.704a1 1 0 00.94-1.342l-4-10A1 1 0 0014.704 0H9.296a1 1 0 00-.94.658l-4 10A1 1 0 005.296 12H10v10a1 1 0 001.707.707l7-7a1 1 0 00-.707-1.707H14V10z"></path></svg>
                 </div>
-                <h3 class="text-2xl font-extrabold mb-4">Feedback Loop</h3>
-                <p class="text-slate-400 font-medium leading-relaxed">Anonymous reviews and ratings from your seniors to help you make informed decisions.</p>
+                <h3 class="text-2xl font-black text-slate-900 mb-4">Feedback Loop</h3>
+                <p class="text-slate-600 font-medium leading-relaxed">Anonymous reviews and ratings from your seniors to help you make informed decisions.</p>
             </div>
         </div>
     </section>
 
-    <footer class="py-20 text-center border-t border-white/5 mt-40">
+    <footer class="py-20 text-center border-t border-indigo-100 mt-40">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
-            <div class="text-slate-500 text-sm font-medium italic">
+            <div class="text-slate-500 text-sm font-black uppercase tracking-widest italic">
                 &copy; 2026 Elective Navigator. Engineered for the future.
             </div>
-            <div class="flex gap-8 text-slate-400 text-sm font-bold uppercase tracking-widest">
-                <a href="#" class="hover:text-indigo-400 transition-colors">Privacy</a>
-                <a href="#" class="hover:text-indigo-400 transition-colors">Terms</a>
-                <a href="#" class="hover:text-indigo-400 transition-colors">Support</a>
+            <div class="flex gap-8 text-slate-500 text-sm font-black uppercase tracking-[0.2em]">
+                <a href="#" class="hover:text-indigo-600 transition-colors">Privacy</a>
+                <a href="#" class="hover:text-indigo-600 transition-colors">Terms</a>
+                <a href="#" class="hover:text-indigo-600 transition-colors">Support</a>
             </div>
         </div>
     </footer>
@@ -265,6 +261,39 @@
             el.style.transitionDelay = `${i * 150}ms`;
             observer.observe(el);
         });
+
+        // Typewriter Effect
+        const phrases = ["Academic Future", "Future Goals", "Career Success"];
+        let phraseIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typeTarget = document.getElementById('typewriter');
+
+        function type() {
+            const current = phrases[phraseIndex];
+            if (isDeleting) {
+                typeTarget.textContent = current.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typeTarget.textContent = current.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 100 : 200;
+
+            if (!isDeleting && charIndex === current.length) {
+                isDeleting = true;
+                typeSpeed = 2000; // Pause at end
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        window.onload = type;
     </script>
 </body>
 </html>

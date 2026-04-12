@@ -8,17 +8,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-obsidian: #050505;
-            --accent-indigo: #6366f1;
-            --accent-purple: #a855f7;
-            --glass-white: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --bg-arctic: #f8fafc;
+            --accent-indigo: #4338ca;
+            --accent-purple: #7c3aed;
+            --glass-white: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(99, 102, 241, 0.1);
         }
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-obsidian);
-            color: #e2e8f0;
+            background-color: var(--bg-arctic);
+            color: #1e293b;
             min-height: screen;
         }
 
@@ -27,29 +27,30 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             filter: blur(100px);
-            opacity: 0.4;
-            background: radial-gradient(circle at 10% 20%, var(--accent-indigo) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, var(--accent-purple) 0%, transparent 40%);
+            opacity: 0.15;
+            background: radial-gradient(circle at 10% 20%, #6366f1 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, #a855f7 0%, transparent 40%);
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
         }
 
         input, select {
-            background: rgba(255, 255, 255, 0.04) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            background: rgba(255, 255, 255, 0.8) !important;
+            border: 1px solid rgba(0, 0, 0, 0.05) !important;
             transition: all 0.3s ease;
-            color: white !important;
+            color: #1e293b !important;
         }
 
         input:focus, select:focus {
             border-color: var(--accent-indigo) !important;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
             outline: none;
+            background: #fff !important;
         }
 
         .btn-premium {
@@ -59,11 +60,11 @@
 
         .btn-premium:hover {
             transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
         }
 
         .section-tag {
-            background: rgba(99, 102, 241, 0.1);
+            background: rgba(99, 102, 241, 0.05);
             color: var(--accent-indigo);
             padding: 4px 12px;
             border-radius: 99px;
@@ -71,11 +72,11 @@
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            border: 1px solid rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.1);
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-6 py-20 bg-[#050505]">
+<body class="flex items-center justify-center p-6 py-20 bg-[#f8fafc]">
 
     <div class="mesh-bg"></div>
 
@@ -84,15 +85,15 @@
             
             <div class="mb-12">
                 <span class="section-tag mb-4 inline-block">Security Verified</span>
-                <h1 class="text-4xl font-extrabold mb-3 tracking-tight">Complete Your Identity</h1>
-                <p class="text-slate-400 font-medium">Please provide your academic and personal details to unlock the full potential of your portal.</p>
+                <h1 class="text-4xl font-black mb-3 tracking-tight text-slate-900">Complete Your Identity</h1>
+                <p class="text-slate-500 font-semibold">Please provide your academic and personal details to unlock the full potential of your portal.</p>
             </div>
 
             <form id="setupProfileForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
                 <!-- Personal Group -->
-                <div class="lg:col-span-3 border-b border-white/5 pb-4 mb-2">
-                    <h3 class="text-sm font-black text-white/50 uppercase tracking-widest">Personal Information</h3>
+                <div class="lg:col-span-3 border-b border-slate-100 pb-4 mb-2">
+                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest">Personal Information</h3>
                 </div>
 
                 <div class="space-y-2">

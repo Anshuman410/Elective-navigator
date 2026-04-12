@@ -8,17 +8,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-obsidian: #050505;
-            --accent-indigo: #6366f1;
-            --accent-purple: #a855f7;
-            --glass-white: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
+            --bg-arctic: #f8fafc;
+            --accent-indigo: #4338ca;
+            --accent-purple: #7c3aed;
+            --glass-white: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(99, 102, 241, 0.1);
         }
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-obsidian);
-            color: #e2e8f0;
+            background-color: var(--bg-arctic);
+            color: #1e293b;
             min-height: screen;
         }
 
@@ -27,73 +27,75 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             filter: blur(100px);
-            opacity: 0.4;
-            background: radial-gradient(circle at 10% 20%, var(--accent-indigo) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, var(--accent-purple) 0%, transparent 40%);
+            opacity: 0.15;
+            background: radial-gradient(circle at 10% 20%, #6366f1 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, #a855f7 0%, transparent 40%);
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.05);
         }
 
         input, select {
-            background: rgba(255, 255, 255, 0.04) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid rgba(0, 0, 0, 0.08) !important;
             transition: all 0.3s ease;
-            color: white !important;
+            color: #1e293b !important;
         }
 
         input:focus, select:focus {
             border-color: var(--accent-indigo) !important;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
+            background: #fff !important;
             outline: none;
         }
 
         .btn-premium {
             background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .btn-premium:hover {
             transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+            box-shadow: 0 15px 30px -10px rgba(99, 102, 241, 0.5);
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-6 py-20 bg-[#050505]">
+<body class="flex items-center justify-center p-6 py-20 bg-[#f8fafc]">
 
     <div class="mesh-bg"></div>
 
     <div class="w-full max-w-2xl relative">
         <div class="glass-card p-8 md:p-12 rounded-[2.5rem] relative overflow-hidden">
-            <a href="index.html" class="inline-flex items-center gap-2 text-slate-500 hover:text-white transition-colors mb-10 group">
+            <a href="index.html" class="inline-flex items-center gap-2 text-slate-400 hover:text-indigo-600 transition-colors mb-10 group">
                 <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                 <span class="text-sm font-bold uppercase tracking-widest">Back to Portal</span>
             </a>
 
             <div class="mb-12">
-                <h1 class="text-4xl font-extrabold mb-3 tracking-tight">Create Profile</h1>
-                <p class="text-slate-400 font-medium">Join the elite network of students optimizing their future.</p>
+                <h1 class="text-4xl font-black mb-3 tracking-tight text-slate-900">Create Profile</h1>
+                <p class="text-slate-500 font-semibold italic">Join the network of students optimizing their future.</p>
             </div>
 
             <form id="registerForm" class="space-y-8">
                 
                 <div class="space-y-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
-                    <input type="text" id="name" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none" placeholder="Enter your full name">
+                    <label class="text-xs font-black uppercase tracking-widest text-slate-500 ml-1">Full Name</label>
+                    <input type="text" id="name" required class="w-full rounded-2xl px-5 py-4 placeholder-slate-400 focus:outline-none" placeholder="Enter your full name">
                 </div>
 
                 <div class="space-y-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Student ID</label>
-                    <input type="text" id="studentId" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none" placeholder="Enter your Student ID">
+                    <label class="text-xs font-black uppercase tracking-widest text-slate-500 ml-1">Student ID</label>
+                    <input type="text" id="studentId" required class="w-full rounded-2xl px-5 py-4 placeholder-slate-400 focus:outline-none" placeholder="Enter your Student ID">
                 </div>
 
                 <div class="space-y-2">
-                    <label class="text-xs font-bold uppercase tracking-widest text-slate-500 ml-1">Secure Password</label>
-                    <input type="password" id="password" required class="w-full rounded-2xl px-5 py-4 text-white placeholder-slate-600 focus:outline-none" placeholder="••••••••">
+                    <label class="text-xs font-black uppercase tracking-widest text-slate-500 ml-1">Secure Password</label>
+                    <input type="password" id="password" required class="w-full rounded-2xl px-5 py-4 placeholder-slate-400 focus:outline-none" placeholder="••••••••">
                 </div>
 
                 <div class="pt-6">
@@ -105,8 +107,8 @@
                 <div id="messageBox" class="hidden p-4 rounded-2xl text-sm font-bold text-center border"></div>
             </form>
 
-            <p class="mt-12 text-center text-slate-500 text-sm font-medium">
-                Already have an account? <a href="login.html" class="text-white hover:text-indigo-400 font-bold transition-colors">Sign In</a>
+            <p class="mt-12 text-center text-slate-500 text-sm font-semibold">
+                Already have an account? <a href="login.html" class="text-indigo-600 hover:text-indigo-500 font-black transition-colors">Sign In</a>
             </p>
         </div>
     </div>
@@ -117,5 +119,4 @@
     </script>
 </body>
 </html>
-</body>
 </html>
