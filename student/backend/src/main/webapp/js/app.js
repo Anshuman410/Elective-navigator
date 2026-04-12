@@ -204,9 +204,9 @@ async function loadDashboard() {
     ];
 
     matrix.innerHTML = fields.map(f => `
-        <div class="flex items-center justify-between py-5 border-b border-white/5 hover:bg-white/[0.01] transition-colors px-4 rounded-xl group">
+        <div class="flex items-center justify-between py-5 border-b border-indigo-50/50 hover:bg-white/[0.2] transition-colors px-4 rounded-xl group">
             <span class="text-xs font-black text-slate-500 uppercase tracking-widest">${f.label}</span>
-            <span class="text-sm font-bold text-white tracking-tight group-hover:text-indigo-400 transition-colors">
+            <span class="text-sm font-bold text-slate-900 tracking-tight group-hover:text-indigo-600 transition-colors">
                 ${f.format ? f.format(studentData[f.key]) : (studentData[f.key] || '---')}
             </span>
         </div>
@@ -321,14 +321,14 @@ function renderElectivesGrid() {
         currentAnalysis.forEach((cat, index) => {
             if (cat.score > 0) {
                 analysisHtml += `
-                    <div class="p-6 rounded-3xl ${index === 0 ? 'bg-indigo-500/20 border border-indigo-500/30' : 'bg-white/5 border border-white/5'}">
+                    <div class="p-6 rounded-3xl ${index === 0 ? 'bg-indigo-500/10 border border-indigo-500/20' : 'bg-slate-50 border border-slate-100'}">
                         <div class="flex items-center gap-4 mb-3">
                             <div class="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 font-black flex items-center justify-center text-xs border border-indigo-500/30">
                                 ${index + 1}
                             </div>
-                            <h4 class="text-white font-extrabold text-lg tracking-tight">${cat.trait}</h4>
+                            <h4 class="text-indigo-950 font-extrabold text-lg tracking-tight">${cat.trait}</h4>
                         </div>
-                        <p class="text-slate-400 text-sm leading-relaxed font-medium">${cat.reason}</p>
+                        <p class="text-slate-500 text-sm leading-relaxed font-medium">${cat.reason}</p>
                     </div>
                 `;
             }
@@ -366,8 +366,8 @@ function renderElectivesGrid() {
         if (currentAnalysis) {
             reasonHtml = `
                 <div class="bg-indigo-500/5 border border-indigo-500/20 rounded-2xl p-4 mb-6">
-                    <p class="text-[9px] text-indigo-400 mb-1 font-black uppercase tracking-[0.2em]">Match Logic</p>
-                    <p class="text-xs text-slate-400 leading-relaxed font-medium">Aligned with <span class="text-white font-bold">${elective.mappedTrait}</span> path.</p>
+                    <p class="text-[9px] text-indigo-500 mb-1 font-black uppercase tracking-[0.2em]">Match Logic</p>
+                    <p class="text-xs text-slate-500 leading-relaxed font-medium">Aligned with <span class="text-indigo-900 font-bold">${elective.mappedTrait}</span> path.</p>
                 </div>
             `;
         }
@@ -375,38 +375,37 @@ function renderElectivesGrid() {
         card.innerHTML = `
             ${badgeHtml}
             <div class="flex justify-between items-start mb-8">
-                <div class="w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-indigo-400 group-hover:scale-110 transition-transform duration-500">
+                <div class="w-14 h-14 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:scale-110 transition-transform duration-500">
                     <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                 </div>
-                <label class="flex items-center gap-3 cursor-pointer bg-white/5 px-4 py-2 rounded-xl border border-white/5 hover:border-indigo-500/50 transition-all">
+                <label class="flex items-center gap-3 cursor-pointer bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 hover:border-indigo-500/50 transition-all">
                     <input type="checkbox" class="w-4 h-4 rounded-lg text-indigo-500 bg-white/5 border-white/10 focus:ring-indigo-500 focus:ring-offset-0" ${isChecked ? 'checked' : ''} onchange="toggleCompare('${elective.subjectName}', this.checked)">
                     <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Compare</span>
                 </label>
             </div>
 
             <div class="mb-4">
-                <h3 class="text-2xl font-black text-white tracking-tight mb-1">${elective.subjectName}</h3>
+                <h3 class="text-2xl font-black text-indigo-950 tracking-tight mb-1">${elective.subjectName}</h3>
                 <p class="text-[10px] text-indigo-400 font-black uppercase tracking-[0.2em] mb-4">${elective.subjectId || 'REGO-N/A'}</p>
                 <div class="flex items-center gap-2 text-slate-400 text-sm font-semibold mb-6">
                     <div class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     </div>
-                    Prof. ${elective.teacher}
+                    Prof. <span class="text-slate-700">${elective.teacher}</span>
                 </div>
             </div>
 
             ${reasonHtml}
 
             <div class="flex flex-wrap gap-3 mb-10">
-                <span class="px-3 py-1 rounded-lg bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-widest text-slate-400">${elective.category || 'N/A'}</span>
-                <span class="px-3 py-1 rounded-lg bg-orange-500/10 border border-orange-500/20 text-[9px] font-black uppercase tracking-widest text-orange-400">${elective.difficulty || 'N/A'}</span>
+                <span class="px-3 py-1 rounded-lg bg-orange-50 border border-orange-100 text-[9px] font-black uppercase tracking-widest text-orange-600">${elective.difficulty || 'N/A'}</span>
                 ${elective.syllabus ? `<button onclick="downloadPDF('${elective.syllabus}', '${elective.subjectName}')" class="px-3 py-1 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-[9px] font-black uppercase tracking-widest text-indigo-400 flex items-center gap-2 hover:bg-indigo-500 hover:text-white transition-all">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
                     PDF
                 </button>` : ''}
             </div>
 
-            <button onclick="finalizeElective('${elective.subjectName}')" class="w-full py-4 rounded-2xl bg-white/5 hover:bg-white text-slate-400 hover:text-black font-black text-sm uppercase tracking-widest border border-white/10 hover:border-white transition-all mt-auto group">
+            <button onclick="finalizeElective('${elective.subjectName}')" class="w-full py-4 rounded-2xl bg-indigo-50 hover:bg-indigo-600 text-indigo-600 hover:text-white font-black text-sm uppercase tracking-widest border border-indigo-100 transition-all mt-auto group">
                 Finalize Registry
             </button>
         `;
