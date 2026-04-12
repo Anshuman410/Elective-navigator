@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Feedback - Elective Navigator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+    </style>
+</head>
+<body class="bg-[#0a0c10] text-slate-200 min-h-screen flex">
+
+    <!-- Sidebar -->
+    <aside class="w-64 bg-black/20 border-r border-white/5 hidden md:flex flex-col justify-between z-20">
+        <div>
+            <div class="h-20 flex items-center px-8 border-b border-white/5">
+                <span class="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-rose-400">Navigator</span>
+            </div>
+            <div class="p-6 space-y-4 text-slate-400 font-medium">
+                <a href="dashboard.html" class="flex items-center gap-3 hover:text-white px-4 py-3 rounded-lg hover:bg-white/5 transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Dashboard
+                </a>
+                <a href="feedback.html" class="flex items-center gap-3 text-white bg-indigo-600/20 px-4 py-3 rounded-lg border border-indigo-500/30">
+                    <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    Give Feedback
+                </a>
+            </div>
+        </div>
+        <div class="p-6">
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-2 text-slate-400 hover:text-white px-4 py-3 bg-red-500/10 hover:bg-red-500/20 rounded-xl transition-all border border-transparent hover:border-red-500/20">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-grow flex flex-col relative h-screen overflow-y-auto">
+        <!-- Background Elements -->
+        <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+            <div class="absolute top-1/4 right-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-[128px]"></div>
+            <div class="absolute bottom-1/4 left-0 w-96 h-96 bg-rose-600/10 rounded-full blur-[128px]"></div>
+        </div>
+
+        <div class="p-6 md:p-10 max-w-4xl mx-auto w-full">
+            
+            <div class="mb-10">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">Subject Feedback</h1>
+                <p class="text-slate-400">Share your experience with subjects from your completed semesters.</p>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 p-8 rounded-[2rem] shadow-2xl space-y-8">
+                
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-300">Select Previous Semester</label>
+                    <select id="prevSemester" onchange="loadPrevSubjects()" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none cursor-pointer">
+                        <option value="" disabled selected class="bg-[#0a0c10]">Choose Semester</option>
+                        <!-- Options filled via JS -->
+                    </select>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-300">Select Subject</label>
+                    <select id="prevSubject" disabled class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all appearance-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                        <option value="" disabled selected class="bg-[#0a0c10]">First select a semester</option>
+                    </select>
+                </div>
+
+                <div class="space-y-4">
+                    <label class="text-sm font-medium text-slate-300">Your Rating</label>
+                    <div class="flex gap-4">
+                        <button onclick="setRating(1)" class="rating-star w-12 h-12 flex items-center justify-center rounded-xl border border-white/10 hover:border-indigo-500 transition-all text-2xl" data-val="1">⭐</button>
+                        <button onclick="setRating(2)" class="rating-star w-12 h-12 flex items-center justify-center rounded-xl border border-white/10 hover:border-indigo-500 transition-all text-2xl" data-val="2">⭐</button>
+                        <button onclick="setRating(3)" class="rating-star w-12 h-12 flex items-center justify-center rounded-xl border border-white/10 hover:border-indigo-500 transition-all text-2xl" data-val="3">⭐</button>
+                        <button onclick="setRating(4)" class="rating-star w-12 h-12 flex items-center justify-center rounded-xl border border-white/10 hover:border-indigo-500 transition-all text-2xl" data-val="4">⭐</button>
+                        <button onclick="setRating(5)" class="rating-star w-12 h-12 flex items-center justify-center rounded-xl border border-white/10 hover:border-indigo-500 transition-all text-2xl" data-val="5">⭐</button>
+                    </div>
+                    <input type="hidden" id="ratingValue" value="0">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-300">Detailed Feedback</label>
+                    <textarea id="feedbackComment" rows="4" class="w-full bg-white/5 border border-white/10 rounded-2xl px-4 py-4 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all" placeholder="Tell us about the course content, teaching style, and difficulty..."></textarea>
+                </div>
+
+                <div class="pt-4">
+                    <button onclick="submitFeedback()" id="feedbackBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 rounded-2xl transition-all shadow-lg shadow-indigo-500/20">
+                        Submit Private Feedback
+                    </button>
+                </div>
+
+                <div id="feedbackMsg" class="hidden p-4 rounded-xl text-sm font-medium text-center"></div>
+            </div>
+
+            <div class="mt-12 text-center text-slate-500 text-sm">
+                Feedback is anonymous and help future students make better choices.
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const studentDataStr = localStorage.getItem('studentData');
+            if (!studentDataStr) { window.location.href = 'login.html'; return; }
+            const studentData = JSON.parse(studentDataStr);
+            const currentSem = parseInt(studentData.semester);
+            
+            const select = document.getElementById('prevSemester');
+            for(let i=1; i < currentSem; i++) {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = `Semester ${i}`;
+                select.appendChild(opt);
+            }
+            if(currentSem <= 1) {
+                select.innerHTML = '<option value="" disabled selected>No previous semesters available</option>';
+            }
+        });
+
+        async function loadPrevSubjects() {
+            const sem = document.getElementById('prevSemester').value;
+            const subSelect = document.getElementById('prevSubject');
+            subSelect.disabled = true;
+            subSelect.innerHTML = '<option value="" disabled selected>Loading subjects...</option>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/electives?semester=${sem}`);
+                const data = await response.json();
+                if (data.success && data.data) {
+                    subSelect.innerHTML = '<option value="" disabled selected>Select a subject</option>';
+                    data.data.forEach(sub => {
+                        const opt = document.createElement('option');
+                        opt.value = sub.subjectName;
+                        opt.textContent = sub.subjectName;
+                        subSelect.appendChild(opt);
+                    });
+                    subSelect.disabled = false;
+                }
+            } catch (e) {
+                subSelect.innerHTML = '<option value="" disabled selected>Error loading subjects</option>';
+            }
+        }
+
+        let currentRating = 0;
+        function setRating(val) {
+            currentRating = val;
+            document.getElementById('ratingValue').value = val;
+            document.querySelectorAll('.rating-star').forEach(star => {
+                const starVal = parseInt(star.getAttribute('data-val'));
+                if(starVal <= val) {
+                    star.classList.replace('border-white/10', 'border-indigo-500');
+                    star.classList.add('bg-indigo-500/20');
+                } else {
+                    star.classList.replace('border-indigo-500', 'border-white/10');
+                    star.classList.remove('bg-indigo-500/20');
+                }
+            });
+        }
+
+        async function submitFeedback() {
+            const studentData = JSON.parse(localStorage.getItem('studentData'));
+            const subject = document.getElementById('prevSubject').value;
+            const semester = document.getElementById('prevSemester').value;
+            const comment = document.getElementById('feedbackComment').value.trim();
+            const rating = document.getElementById('ratingValue').value;
+            const btn = document.getElementById('feedbackBtn');
+            const msg = document.getElementById('feedbackMsg');
+
+            if(!subject || !rating || rating == "0" || !comment) {
+                alert("Please fill all fields and provide a rating.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = "Submitting...";
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studentId: studentData.studentId,
+                        subjectName: subject,
+                        semester: semester,
+                        rating: rating,
+                        comment: comment
+                    })
+                });
+                const data = await response.json();
+                if(data.success) {
+                    msg.className = "p-4 rounded-xl text-sm font-medium text-center bg-teal-100 text-teal-600 border border-teal-200 mt-6";
+                    msg.textContent = "Thank you for your feedback!";
+                    msg.classList.remove('hidden');
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (e) {
+                msg.className = "p-4 rounded-xl text-sm font-medium text-center bg-red-100 text-red-600 border border-red-200 mt-6";
+                msg.textContent = e.message;
+                msg.classList.remove('hidden');
+                btn.disabled = false;
+                btn.innerHTML = "Submit Private Feedback";
+            }
+        }
+    </script>
+</body>
+</html>

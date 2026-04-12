@@ -29,11 +29,16 @@ public class AdminDashboard extends JFrame {
         manageQueries.setBounds(100,270,200,40);
         add(manageQueries);
 
+        JButton viewUsers = new JButton("View Users");
+        viewUsers.setBounds(100,330,200,40);
+        add(viewUsers);
+
         add.addActionListener(e -> new AddElective());
         view.addActionListener(e -> new ViewElectives());
         edit.addActionListener(e -> new EditElective());
         delete.addActionListener(e -> new DeleteElective());
         manageQueries.addActionListener(e -> new ViewQueries());
+        viewUsers.addActionListener(e -> new ViewStudents());
 
         setVisible(true);
     }

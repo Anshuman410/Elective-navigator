@@ -1,5 +1,6 @@
 import javax.swing.*;
 import com.mongodb.client.*;
+import org.bson.Document;
 import static com.mongodb.client.model.Filters.eq;
 
 public class DeleteElective extends JFrame {
@@ -12,30 +13,35 @@ public class DeleteElective extends JFrame {
         setSize(300,200);
         setLayout(null);
 
-        JLabel l = new JLabel("Subject Name");
-        l.setBounds(30,40,100,30);
-        add(l);
+        JLabel l1 = new JLabel("Subject ID");
+        l1.setBounds(30,30,100,30);
+        add(l1);
 
         subject = new JTextField();
-        subject.setBounds(140,40,120,30);
+        subject.setBounds(130,30,150,30);
         add(subject);
 
         JButton delete = new JButton("Delete");
-        delete.setBounds(90,100,120,30);
+        delete.setBounds(100,80,120,30);
         add(delete);
 
-        delete.addActionListener(e -> remove());
+        delete.addActionListener(e -> deleteElective());
 
         setVisible(true);
     }
 
-    void remove() {
+    void deleteElective() {
 
         MongoDatabase db = MongoDBConnection.getDatabase();
-        MongoCollection col = db.getCollection("electives");
+        MongoCollection<Document> col = db.getCollection("electives");
 
-        col.deleteOne(eq("subjectName",subject.getText()));
+        long count = col.deleteOne(eq("subjectId", subject.getText())).getDeletedCount();
 
-        JOptionPane.showMessageDialog(this,"Deleted");
+        if (count > 0) {
+            JOptionPane.showMessageDialog(this, "Deleted successfully.");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "No elective found with Subject ID: " + subject.getText());
+        }
     }
 }

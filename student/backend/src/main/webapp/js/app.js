@@ -169,6 +169,20 @@ function renderPostSelectionView(subjectName) {
                     document.getElementById('finalElectiveTeacher').textContent = el.teacher || '---';
                     document.getElementById('finalElectiveCategory').textContent = el.category || '---';
                     document.getElementById('finalElectiveDiff').textContent = el.difficulty || '---';
+                    
+                    // Add Subject ID and Syllabus to post selection view if elements exist
+                    const idSpan = document.createElement('span');
+                    idSpan.className = 'text-xs text-indigo-500 font-bold block mt-2 opacity-70';
+                    idSpan.textContent = `CODE: ${el.subjectId || 'N/A'}`;
+                    document.getElementById('finalElectiveName').parentNode.insertBefore(idSpan, document.getElementById('finalElectiveName').nextSibling);
+
+                    if (el.syllabus) {
+                        const sylBtn = document.createElement('button');
+                        sylBtn.className = 'mt-4 bg-white/20 hover:bg-white/30 text-slate-800 text-xs font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-all border border-white/20';
+                        sylBtn.innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Download Syllabus`;
+                        sylBtn.onclick = () => downloadPDF(el.syllabus, el.subjectName);
+                        document.getElementById('finalElectiveName').parentNode.appendChild(sylBtn);
+                    }
                 }
             }
         });
@@ -288,7 +302,8 @@ function renderElectivesGrid() {
                         <span class="text-xs font-semibold text-slate-600">Compare</span>
                     </label>
                 </div>
-                <h3 class="text-xl font-bold text-slate-800 mb-2">${elective.subjectName}</h3>
+                <h3 class="text-xl font-bold text-slate-800 mb-1">${elective.subjectName}</h3>
+                <p class="text-[10px] text-indigo-600 font-bold mb-2 tracking-wider">${elective.subjectId || 'CODE-N/A'}</p>
                 <p class="text-slate-500 text-sm flex items-center gap-2 mb-3">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                     Prof. ${elective.teacher}
@@ -297,6 +312,10 @@ function renderElectivesGrid() {
                 <div class="mt-4 flex flex-wrap gap-2 mb-6">
                     <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide">${elective.category || 'N/A'}</span>
                     <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide text-amber-600">${elective.difficulty || 'N/A'}</span>
+                    ${elective.syllabus ? `<button onclick="downloadPDF('${elective.syllabus}', '${elective.subjectName}')" class="bg-indigo-50 text-indigo-600 text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-wide border border-indigo-100 flex items-center gap-1 hover:bg-indigo-600 hover:text-white transition-colors">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        Syllabus PDF
+                    </button>` : ''}
                 </div>
             </div>
             <button onclick="finalizeElective('${elective.subjectName}')" class="w-full py-3 bg-slate-50 hover:bg-emerald-500 border border-slate-200 hover:border-emerald-500 hover:text-white rounded-xl font-semibold transition-colors mt-auto shadow-lg hover:shadow-emerald-500/20 text-slate-800">
@@ -666,4 +685,21 @@ async function loadQueries(studentData) {
 function logout() {
     localStorage.removeItem('studentData');
     window.location.href = 'login.html';
+}
+
+/**
+ * Handle Base64 PDF download
+ */
+function downloadPDF(base64Data, filename) {
+    try {
+        const linkSource = `data:application/pdf;base64,${base64Data}`;
+        const downloadLink = document.createElement("a");
+        const fileName = `${filename.replace(/ /g, "_")}_Syllabus.pdf`;
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
+    } catch (e) {
+        console.error("PDF Download failed", e);
+        alert("Failed to download PDF. The file might be corrupted or too large.");
+    }
 }
