@@ -537,17 +537,17 @@ function openQuizModal() {
         let optionsHtml = '';
         for (const [key, val] of Object.entries(item.options)) {
             optionsHtml += `
-                <label class="flex items-center gap-4 p-5 rounded-2xl border border-white/5 bg-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5 cursor-pointer transition-all group">
-                    <input type="radio" name="q${index}" value="${key}" class="w-5 h-5 text-indigo-500 bg-white/10 border-white/10 focus:ring-indigo-500 focus:ring-offset-0">
-                    <span class="text-slate-400 group-hover:text-white font-bold text-sm tracking-tight">${val}</span>
+                <label class="flex items-center gap-4 p-5 rounded-2xl border border-slate-200 bg-slate-50 hover:border-indigo-500/50 hover:bg-indigo-50 cursor-pointer transition-all group">
+                    <input type="radio" name="q${index}" value="${key}" class="w-5 h-5 text-indigo-500 bg-white border-slate-300 focus:ring-indigo-500 focus:ring-offset-0">
+                    <span class="text-slate-600 group-hover:text-indigo-700 font-bold text-sm tracking-tight">${val}</span>
                 </label>
             `;
         }
         
         container.innerHTML += `
             <div class="mb-12 last:mb-0">
-                <h4 class="text-xl font-black text-white mb-6 flex gap-4">
-                    <span class="text-indigo-500">Q${index + 1}.</span> ${item.q}
+                <h4 class="text-xl font-black text-slate-900 mb-6 flex gap-4">
+                    <span class="text-indigo-600">Q${index + 1}.</span> ${item.q}
                 </h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     ${optionsHtml}
