@@ -8,52 +8,54 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-cosmic: #060212;
-            --bg-deep: #0a041f;
-            --accent-purple: #9d50bb;
-            --accent-indigo: #6e48aa;
-            --accent-cyan: #00d2ff;
-            --accent-magenta: #ff00cc;
-            --glass-white: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text-main: #ffffff;
-            --text-muted: #94a3b8;
+            --bg-soft: #ffffff;
+            --accent-pink: #ffdae9;
+            --accent-blue: #d4f1f9;
+            --accent-indigo: #2c3e50;
+            --accent-purple: #9b59b6;
+            --glass-white: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.05);
+            --text-main: #34495e;
+            --text-muted: #7f8c8d;
         }
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-cosmic);
+            background-color: var(--bg-soft);
             color: var(--text-main);
             overflow-x: hidden;
             scroll-behavior: smooth;
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-cosmic); }
-        ::-webkit-scrollbar-thumb { 
-            background: linear-gradient(to bottom, var(--accent-purple), var(--accent-magenta)); 
-            border-radius: 10px;
-        }
-
-        /* Cosmic Mesh Animation */
+        /* Calm Floating Blobs Animation */
         .mesh-bg {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            filter: blur(80px);
-            opacity: 0.6;
-            background: radial-gradient(circle at 10% 20%, #2e026d 0%, transparent 50%),
-                        radial-gradient(circle at 90% 80%, #1a0b3b 0%, transparent 50%),
-                        radial-gradient(circle at 50% 50%, #430a5d 0%, transparent 40%),
-                        radial-gradient(circle at 80% 10%, #00d2ff1a 0%, transparent 30%);
-            animation: meshMove 25s infinite alternate ease-in-out;
+            background: #fff;
+            overflow: hidden;
         }
 
-        @keyframes meshMove {
-            0% { transform: scale(1) translate(0, 0); }
-            50% { transform: scale(1.1) translate(2%, 2%); }
-            100% { transform: scale(1) translate(-2%, -2%); }
+        .blob {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-pink) 0%, transparent 70%);
+            filter: blur(100px);
+            opacity: 0.4;
+            animation: move 20s infinite alternate ease-in-out;
+        }
+
+        .blob-2 {
+            background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
+            left: 50%;
+            top: 20%;
+            animation-delay: -5s;
+        }
+
+        @keyframes move {
+            0% { transform: translate(-10%, -10%) scale(1); }
+            100% { transform: translate(10%, 10%) scale(1.1); }
         }
 
         /* Hero Layout Components */
@@ -72,7 +74,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .center-visual {
@@ -82,64 +83,61 @@
             position: relative;
         }
 
-        /* Refined 3D Brain Simulation */
-        .rotating-brain {
-            width: 500px;
-            height: 500px;
-            object-fit: contain;
-            filter: drop-shadow(0 0 50px rgba(157, 80, 187, 0.6));
-            animation: rotateBrain3D 15s infinite ease-in-out;
-            mix-blend-mode: screen; /* REMOVES CHECKERBOARD/BLACK BACKGROUND */
-            transform-style: preserve-3d;
-            perspective: 1000px;
+        /* Integrated Video/Brain Container */
+        .brain-video-container {
+            width: 550px;
+            height: 550px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        @keyframes rotateBrain3D {
-            0% { transform: perspective(1000px) rotateY(0deg) rotateX(10deg) scale(1); }
-            25% { transform: perspective(1000px) rotateY(90deg) rotateX(-5deg) scale(1.05); }
-            50% { transform: perspective(1000px) rotateY(180deg) rotateX(10deg) scale(1.1); }
-            75% { transform: perspective(1000px) rotateY(270deg) rotateX(-5deg) scale(1.05); }
-            100% { transform: perspective(1000px) rotateY(360deg) rotateX(10deg) scale(1); }
+        .brain-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply; /* Works best for light themes to blend white backgrounds */
+            filter: drop-shadow(0 0 30px rgba(155, 89, 182, 0.2));
+        }
+
+        .brain-fallback {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            mix-blend-mode: multiply;
+            animation: pulse 4s infinite alternate;
         }
 
         .brain-glow {
             position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(157, 80, 187, 0.2) 0%, transparent 70%);
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(155, 89, 182, 0.1) 0%, transparent 70%);
             border-radius: 50%;
             filter: blur(40px);
             z-index: -1;
-            animation: pulse 4s infinite alternate;
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.5; }
-            100% { transform: scale(1.05); opacity: 0.8; }
+            0% { transform: scale(0.98); opacity: 0.8; }
+            100% { transform: scale(1.02); opacity: 1; }
         }
 
-        /* Integrated Laptop Frame */
-        .laptop-integration {
-            position: relative;
-            padding: 2px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-            border-radius: 30px;
-            box-shadow: 0 0 40px rgba(0, 210, 255, 0.1);
-        }
-
+        /* Laptop Visual Refinement */
         .laptop-visual {
             width: 550px;
-            filter: drop-shadow(0 0 30px rgba(0, 210, 255, 0.2));
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.05));
             animation: float 6s infinite ease-in-out;
-            mix-blend-mode: screen; /* BLENDS LAPTOP IMAGE INTO COSMIC BACKGROUND */
+            mix-blend-mode: multiply;
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            50% { transform: translateY(-15px); }
         }
 
-        /* Course Cards Visual */
+        /* Soft Cards Visual */
         .cards-visual {
             display: flex;
             flex-direction: column;
@@ -148,64 +146,63 @@
         }
 
         .mini-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 20px;
-            width: 280px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            padding: 24px;
+            border-radius: 24px;
+            width: 300px;
             transform: rotateX(10deg) rotateY(-20deg);
-            transition: all 0.4s ease;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
         }
 
         .mini-card:hover {
             transform: rotateX(0) rotateY(0) scale(1.05);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+            background: #ffffff;
+            border-color: rgba(0,0,0,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08);
         }
 
         /* Typography & Buttons */
         .reveal-text {
             opacity: 0;
-            transform: translateY(30px);
-            filter: blur(10px);
+            transform: translateY(20px);
             transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .reveal-text.active {
-            opacity: 1; transform: translateY(0); filter: blur(0);
+            opacity: 1; transform: translateY(0);
         }
 
         .btn-premium {
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(110, 72, 170, 0.4);
+            background: linear-gradient(135deg, #2c3e50, #000);
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
         }
 
-        .btn-premium::after {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
-            transform: scale(0);
-            transition: transform 0.6s ease;
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
         }
-
-        .btn-premium:hover::after { transform: scale(1); }
 
         .glass-nav {
-            background: rgba(6, 2, 18, 0.7);
+            background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
         }
 
         .spotlight-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            transition: all 0.5s ease;
+        }
+
+        .spotlight-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.06);
         }
 
         .typewriter-cursor {
@@ -217,19 +214,21 @@
 </head>
 <body class="selection:bg-indigo-500/20 text-slate-900">
 
-    <div id="cursor-glow"></div>
-    <div class="mesh-bg"></div>
+    <div class="mesh-bg">
+        <div class="blob"></div>
+        <div class="blob-2"></div>
+    </div>
 
     <!-- Navigation -->
     <nav class="fixed top-0 w-full z-[100] transition-all duration-500 glass-nav py-5 px-8 flex justify-between items-center">
         <div class="flex items-center gap-3">
-            <span class="text-xl font-bold tracking-tight text-white">
+            <span class="text-xl font-bold tracking-tight text-slate-800">
                 Elective Navigator
             </span>
         </div>
         <div class="hide-mobile flex items-center gap-10">
-            <a href="#features" class="text-sm font-semibold text-slate-300 hover:text-cyan-400 transition-colors">Features</a>
-            <a href="login.html" class="text-sm font-semibold text-slate-300 hover:text-cyan-400 transition-colors">Login</a>
+            <a href="#features" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Features</a>
+            <a href="login.html" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Login</a>
             <a href="register.html" class="btn-premium px-8 py-3 rounded-xl text-sm font-bold text-white">Get Started</a>
         </div>
     </nav>
@@ -239,13 +238,13 @@
         
         <!-- Hero Header -->
         <div class="text-center mb-16 space-y-6 relative z-20">
-            <h1 class="reveal-text text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter text-white">
+            <h1 class="reveal-text text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter text-slate-900">
                 Architect Your <br>
-                <span class="italic bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-purple-500 to-magenta-500" id="typewriter">
+                <span class="italic bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" id="typewriter">
                     Future Goals
                 </span><span class="typewriter-cursor"></span>
             </h1>
-            <p class="reveal-text text-slate-400 max-w-2xl mx-auto font-medium text-lg">
+            <p class="reveal-text text-slate-600 max-w-2xl mx-auto font-medium text-lg">
                 Streamlining the elective selection process with data-driven insights and a precision-engineered student dashboard.
             </p>
         </div>
@@ -254,40 +253,45 @@
         <div class="hero-container">
             <!-- Left: Laptop Quiz -->
             <div class="side-visual">
-                <div class="laptop-integration">
-                    <img src="images/laptop_quiz.png" alt="Quiz interface" class="laptop-visual">
-                </div>
+                <img src="images/light/laptop_pastel.png" alt="Quiz interface" class="laptop-visual">
             </div>
 
             <!-- Center: Rotating Brain -->
             <div class="center-visual">
-                <div class="brain-glow"></div>
-                <img src="images/glowing_brain.png" alt="Neural Core" class="rotating-brain">
+                <div class="brain-video-container">
+                    <div class="brain-glow"></div>
+                    <!-- User provided video will go here -->
+                    <video class="brain-video" autoplay loop muted playsinline id="brainVideo">
+                        <source src="images/light/brain_video.mp4" type="video/mp4">
+                        <!-- Fallback to our generated sample brain -->
+                        <img src="images/light/brain_sample.png" alt="Neural Core" class="brain-fallback">
+                    </video>
+                </div>
             </div>
 
             <!-- Right: Course Cards -->
             <div class="side-visual">
                 <div class="cards-visual">
                     <div class="mini-card">
-                        <div class="w-10 h-10 bg-cyan-500/20 rounded-lg flex items-center justify-center mb-4 text-cyan-400 border border-cyan-500/30">
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mb-4 text-blue-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
                         </div>
-                        <h4 class="font-bold text-white mb-2">Web Development</h4>
+                        <h4 class="font-bold text-slate-800 mb-2">Web Development</h4>
                         <p class="text-xs text-slate-500">Master modern web technologies and frameworks.</p>
                     </div>
                     <div class="mini-card" style="margin-left: 20px;">
-                        <div class="w-10 h-10 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4 text-purple-400 border border-purple-500/30">
+                        <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center mb-4 text-pink-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.586.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                         </div>
-                        <h4 class="font-bold text-white mb-2">MBA Basics</h4>
+                        <h4 class="font-bold text-slate-800 mb-2">MBA Basics</h4>
                         <p class="text-xs text-slate-500">Foundational principles of business administration.</p>
                     </div>
                     <div class="mini-card" style="margin-left: 40px;">
-                        <div class="w-10 h-10 bg-magenta-500/30 rounded-lg flex items-center justify-center mb-4 text-magenta-300 border border-magenta-500/40">
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mb-4 text-purple-600">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0012 18.75c-1.03 0-1.9-.4-2.583-1.025l-.547-.547z"></path></svg>
                         </div>
-                        <h4 class="font-bold text-white mb-2">Data Science</h4>
-                        <p class="text-xs text-slate-400">Unlocking insights from complex data sets.</p>
+                        <h4 class="font-bold text-slate-800 mb-2">Data Science</h4>
+                        <p class="text-xs text-slate-500">Unlocking insights from complex data sets.</p>
                     </div>
                 </div>
             </div>
@@ -299,7 +303,7 @@
                 Launch Dashboard
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
             </a>
-            <button onclick="document.getElementById('features').scrollIntoView()" class="px-12 py-5 border border-white/10 hover:bg-white/5 rounded-2xl text-lg font-bold text-slate-300 transition-all backdrop-blur-md">
+            <button onclick="document.getElementById('features').scrollIntoView()" class="px-12 py-5 border border-slate-200 hover:bg-slate-50 rounded-2xl text-lg font-bold text-slate-600 transition-all backdrop-blur-md">
                 Explore Platform
             </button>
         </div>
@@ -310,36 +314,36 @@
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
         
         <div class="mb-24 text-center space-y-4">
-            <h2 class="text-4xl md:text-6xl font-black text-white">Next-Gen Management</h2>
-            <p class="text-slate-400 text-lg font-medium">Powerful features built for the modern student experience.</p>
+            <h2 class="text-4xl md:text-6xl font-black text-slate-900">Next-Gen Management</h2>
+            <p class="text-slate-500 text-lg font-medium">Powerful features built for the modern student experience.</p>
         </div>
 
         <div class="grid md:grid-cols-3 gap-8">
             <!-- Card 1 -->
             <div class="spotlight-card p-10 rounded-[2.5rem] group">
-                <div class="w-16 h-16 bg-cyan-500/10 text-cyan-400 rounded-2xl flex items-center justify-center mb-8 border border-cyan-500/20 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-500">
+                <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-8 border border-blue-100 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 </div>
-                <h3 class="text-2xl font-black text-white mb-4">Precision Selection</h3>
-                <p class="text-slate-400 font-medium leading-relaxed">Advanced algorithms to match your skills with the most relevant academic electives available.</p>
+                <h3 class="text-2xl font-black text-slate-900 mb-4">Precision Selection</h3>
+                <p class="text-slate-500 font-medium leading-relaxed">Advanced algorithms to match your skills with the most relevant academic electives available.</p>
             </div>
 
             <!-- Card 2 -->
             <div class="spotlight-card p-10 rounded-[2.5rem] group">
-                <div class="w-16 h-16 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center mb-8 border border-purple-500/20 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
+                <div class="w-16 h-16 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center mb-8 border border-pink-100 group-hover:bg-pink-600 group-hover:text-white transition-all duration-500">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                 </div>
-                <h3 class="text-2xl font-black text-white mb-4">Unified Syllabus</h3>
-                <p class="text-slate-400 font-medium leading-relaxed">Instant access to comprehensive course documents and PDFs in a single, high-speed interface.</p>
+                <h3 class="text-2xl font-black text-slate-900 mb-4">Unified Syllabus</h3>
+                <p class="text-slate-500 font-medium leading-relaxed">Instant access to comprehensive course documents and PDFs in a single, high-speed interface.</p>
             </div>
 
             <!-- Card 3 -->
             <div class="spotlight-card p-10 rounded-[2.5rem] group">
-                <div class="w-16 h-16 bg-magenta-500/10 text-magenta-400 rounded-2xl flex items-center justify-center mb-8 border border-magenta-500/20 group-hover:bg-magenta-600 group-hover:text-white transition-all duration-500">
+                <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-8 border border-purple-100 group-hover:bg-purple-600 group-hover:text-white transition-all duration-500">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.704a1 1 0 00.94-1.342l-4-10A1 1 0 0014.704 0H9.296a1 1 0 00-.94.658l-4 10A1 1 0 005.296 12H10v10a1 1 0 001.707.707l7-7a1 1 0 00-.707-1.707H14V10z"></path></svg>
                 </div>
-                <h3 class="text-2xl font-black text-white mb-4">Feedback Loop</h3>
-                <p class="text-slate-400 font-medium leading-relaxed">Anonymous reviews and ratings from your seniors to help you make informed decisions.</p>
+                <h3 class="text-2xl font-black text-slate-900 mb-4">Feedback Loop</h3>
+                <p class="text-slate-500 font-medium leading-relaxed">Anonymous reviews and ratings from your seniors to help you make informed decisions.</p>
             </div>
         </div>
     </section>
