@@ -91,14 +91,20 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            perspective: 1200px;
         }
 
         .brain-video {
             width: 100%;
             height: 100%;
             object-fit: contain;
-            mix-blend-mode: multiply; /* Works best for light themes to blend white backgrounds */
-            filter: drop-shadow(0 0 30px rgba(155, 89, 182, 0.2));
+            mix-blend-mode: multiply; /* SEAMLESS BLENDING for light backgrounds */
+            filter: drop-shadow(0 0 30px rgba(155, 89, 182, 0.1));
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .brain-video:hover {
+            transform: scale(1.05) translateZ(50px);
         }
 
         .brain-fallback {
@@ -106,22 +112,22 @@
             height: 100%;
             object-fit: contain;
             mix-blend-mode: multiply;
-            animation: pulse 4s infinite alternate;
         }
 
         .brain-glow {
             position: absolute;
             width: 450px;
             height: 450px;
-            background: radial-gradient(circle, rgba(155, 89, 182, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(155, 89, 182, 0.08) 0%, rgba(52, 152, 219, 0.05) 40%, transparent 70%);
             border-radius: 50%;
-            filter: blur(40px);
+            filter: blur(50px);
             z-index: -1;
+            animation: pulse 6s infinite alternate ease-in-out;
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.98); opacity: 0.8; }
-            100% { transform: scale(1.02); opacity: 1; }
+            0% { transform: scale(0.95); opacity: 0.5; }
+            100% { transform: scale(1.05); opacity: 0.9; }
         }
 
         /* Laptop Visual Refinement */
@@ -253,7 +259,7 @@
         <div class="hero-container">
             <!-- Left: Laptop Quiz -->
             <div class="side-visual">
-                <img src="images/light/laptop_pastel.png" alt="Quiz interface" class="laptop-visual">
+                <img src="images/light/laptopquiz.jpeg" alt="Quiz interface" class="laptop-visual">
             </div>
 
             <!-- Center: Rotating Brain -->
@@ -262,9 +268,9 @@
                     <div class="brain-glow"></div>
                     <!-- User provided video will go here -->
                     <video class="brain-video" autoplay loop muted playsinline id="brainVideo">
-                        <source src="videos/Brain_Image_to_D_Rotating_Video.mp4" type="video/mp4">
+                        <source src="videos/3dbarin.mp4" type="video/mp4">
                         <!-- Fallback to our generated sample brain -->
-                        <img src="images/light/brain_sample.png" alt="Neural Core" class="brain-fallback">
+                        <img src="images/light/laptopquiz.jpeg" alt="Neural Core" class="brain-fallback">
                     </video>
                 </div>
             </div>
