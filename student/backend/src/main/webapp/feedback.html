@@ -8,17 +8,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-arctic: #f8fafc;
-            --accent-indigo: #4338ca;
-            --accent-purple: #7c3aed;
-            --glass-white: rgba(255, 255, 255, 0.9);
-            --glass-border: rgba(99, 102, 241, 0.1);
+            --bg-cosmic: #060212;
+            --bg-deep: #0a041f;
+            --accent-purple: #9d50bb;
+            --accent-indigo: #6e48aa;
+            --accent-cyan: #00d2ff;
+            --accent-magenta: #ff00cc;
+            --glass-white: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
         }
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-arctic);
-            color: #1e293b;
+            background-color: var(--bg-cosmic);
+            color: var(--text-main);
             overflow-x: hidden;
         }
 
@@ -26,56 +31,58 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            filter: blur(120px);
-            opacity: 0.15;
-            background: radial-gradient(circle at 10% 20%, #6366f1 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, #a855f7 0%, transparent 40%);
+            filter: blur(100px);
+            opacity: 0.5;
+            background: radial-gradient(circle at 10% 20%, #2e026d 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, #1a0b3b 0%, transparent 40%);
         }
 
         .glass-sidebar {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(10, 4, 31, 0.8);
             backdrop-filter: blur(30px);
             border-right: 1px solid var(--glass-border);
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         input, select, textarea {
-            background: rgba(255, 255, 255, 0.9) !important;
-            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--glass-border) !important;
             transition: all 0.3s ease;
-            color: #1e293b !important;
+            color: white !important;
         }
 
         input:focus, select:focus, textarea:focus {
-            border-color: var(--accent-indigo) !important;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
-            background: #fff !important;
+            border-color: var(--accent-cyan) !important;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08) !important;
             outline: none;
         }
 
         .rating-btn {
-            background: #fff;
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            filter: grayscale(1);
         }
 
         .rating-btn.active {
-            background: rgba(99, 102, 241, 0.1);
-            border-color: var(--accent-indigo);
+            background: rgba(0, 210, 255, 0.1);
+            border-color: var(--accent-cyan);
             transform: scale(1.1);
-            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.2);
+            box-shadow: 0 10px 15px rgba(0, 210, 255, 0.2);
+            filter: grayscale(0);
         }
 
         .btn-premium {
-            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
-            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.3);
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
+            box-shadow: 0 10px 25px rgba(110, 72, 170, 0.3);
         }
     </style>
 </head>
@@ -87,15 +94,15 @@
     <aside class="w-72 glass-sidebar hidden lg:flex flex-col sticky top-0 h-screen z-50">
         <div class="p-8">
             <div class="flex items-center gap-3 mb-10">
-                <span class="text-xl font-bold tracking-tight text-indigo-950 leading-none">Elective Navigator</span>
+                <span class="text-xl font-bold tracking-tight text-white leading-none">Elective Navigator</span>
             </div>
             
             <nav class="space-y-2">
-                <a href="dashboard.html" class="flex items-center gap-4 px-6 py-4 rounded-2xl text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50 transition-all font-semibold">
+                <a href="dashboard.html" class="flex items-center gap-4 px-6 py-4 rounded-2xl text-slate-400 hover:text-cyan-400 hover:bg-white/5 transition-all font-semibold">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                     Dashboard
                 </a>
-                <a href="feedback.html" class="flex items-center gap-4 px-6 py-4 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 font-bold transition-all">
+                <a href="feedback.html" class="flex items-center gap-4 px-6 py-4 rounded-2xl bg-white/5 text-cyan-400 border border-white/10 font-bold transition-all shadow-lg shadow-cyan-500/5">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     Feedback
                 </a>
@@ -115,8 +122,8 @@
         <div class="max-w-4xl mx-auto">
             
             <header class="mb-16">
-                <h1 class="text-5xl font-black tracking-tighter mb-4 text-slate-900">Subject Feedback</h1>
-                <p class="text-slate-500 font-semibold">Contribute to the collective intelligence of our academic community.</p>
+                <h1 class="text-5xl font-black tracking-tighter mb-4 text-white">Subject Feedback</h1>
+                <p class="text-slate-400 font-semibold">Contribute to the collective intelligence of our academic community.</p>
             </header>
 
             <div class="glass-card p-10 md:p-16 rounded-[3rem] shadow-xl space-y-12">
@@ -131,7 +138,7 @@
 
                     <div class="space-y-3">
                         <label class="text-xs font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Curriculum Subject</label>
-                        <select id="prevSubject" disabled class="w-full rounded-2xl px-6 py-5 cursor-pointer appearance-none disabled:opacity-30">
+                        <select id="prevSubject" disabled class="w-full rounded-2xl px-6 py-5 cursor-pointer appearance-none disabled:opacity-10">
                             <option value="" disabled selected>Registry Locked</option>
                         </select>
                     </div>

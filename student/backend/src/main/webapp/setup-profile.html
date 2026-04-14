@@ -8,18 +8,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-arctic: #f8fafc;
-            --accent-indigo: #4338ca;
-            --accent-purple: #7c3aed;
-            --glass-white: rgba(255, 255, 255, 0.9);
-            --glass-border: rgba(99, 102, 241, 0.1);
+            --bg-cosmic: #060212;
+            --bg-deep: #0a041f;
+            --accent-purple: #9d50bb;
+            --accent-indigo: #6e48aa;
+            --accent-cyan: #00d2ff;
+            --accent-magenta: #ff00cc;
+            --glass-white: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
         }
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-arctic);
-            color: #1e293b;
-            min-height: screen;
+            background-color: var(--bg-cosmic);
+            color: var(--text-main);
+            min-height: 100vh;
         }
 
         .mesh-bg {
@@ -27,52 +32,52 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             filter: blur(100px);
-            opacity: 0.15;
-            background: radial-gradient(circle at 10% 20%, #6366f1 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, #a855f7 0%, transparent 40%);
+            opacity: 0.5;
+            background: radial-gradient(circle at 10% 20%, #2e026d 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, #1a0b3b 0%, transparent 40%);
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
         input, select {
-            background: rgba(255, 255, 255, 0.8) !important;
-            border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--glass-border) !important;
             transition: all 0.3s ease;
-            color: #1e293b !important;
+            color: white !important;
         }
 
         input:focus, select:focus {
-            border-color: var(--accent-indigo) !important;
-            box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
+            border-color: var(--accent-cyan) !important;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.1);
             outline: none;
-            background: #fff !important;
+            background: rgba(255, 255, 255, 0.08) !important;
         }
 
         .btn-premium {
-            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-purple));
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-indigo));
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .btn-premium:hover {
             transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 0 30px rgba(110, 72, 170, 0.4);
         }
 
         .section-tag {
-            background: rgba(99, 102, 241, 0.05);
-            color: var(--accent-indigo);
+            background: rgba(0, 210, 255, 0.1);
+            color: var(--accent-cyan);
             padding: 4px 12px;
             border-radius: 99px;
             font-size: 10px;
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            border: 1px solid rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(0, 210, 255, 0.2);
         }
     </style>
 </head>
@@ -85,8 +90,8 @@
             
             <div class="mb-12">
                 <span class="section-tag mb-4 inline-block">Security Verified</span>
-                <h1 class="text-4xl font-black mb-3 tracking-tight text-slate-900">Complete Your Identity</h1>
-                <p class="text-slate-500 font-semibold">Please provide your academic and personal details to unlock the full potential of your portal.</p>
+                <h1 class="text-4xl font-black mb-3 tracking-tight text-white">Complete Your Identity</h1>
+                <p class="text-slate-400 font-semibold">Please provide your academic and personal details to unlock the full potential of your portal.</p>
             </div>
 
             <form id="setupProfileForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -127,8 +132,8 @@
                 </div>
 
                 <!-- Academic Group -->
-                <div class="lg:col-span-3 border-b border-slate-100 pb-4 mt-8 mb-2">
-                    <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest">Academic Information</h3>
+                <div class="lg:col-span-3 border-b border-white/10 pb-4 mt-8 mb-2">
+                    <h3 class="text-sm font-black text-slate-500 uppercase tracking-widest">Academic Information</h3>
                 </div>
 
                 <div class="space-y-2">
