@@ -74,9 +74,10 @@
         .glass-card:hover { border-color: rgba(0,0,0,0.1); transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.06); }
 
         .btn-premium {
-            background: linear-gradient(135deg, #2c3e50, #000);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2);
             color: white;
+            transition: all 0.3s ease;
         }
 
         .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 20px 30px rgba(0,0,0,0.15); }
@@ -119,7 +120,7 @@
         </div>
 
         <div class="mt-auto p-8 border-t border-slate-100">
-            <button onclick="logout()" class="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-rose-50 hover:bg-rose-500 text-rose-500 hover:text-white border border-rose-100 transition-all font-bold">
+            <button onclick="logout()" class="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-rose-50 hover:bg-rose-500 text-rose-600 hover:text-white border border-rose-100 transition-all font-black text-sm uppercase tracking-widest">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                 Sign Out
             </button>
@@ -131,10 +132,10 @@
         <!-- Header -->
         <header class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
             <div>
-                <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-2 text-slate-900">
-                    <span id="dashName" class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">Student</span>
+                <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-2 text-slate-900 leading-tight">
+                    <span id="dashName" class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">Welcome, Scholar</span>
                 </h1>
-                <p class="text-slate-500 font-semibold">Navigating your academic trajectory with precision.</p>
+                <p class="text-slate-600 font-bold italic tracking-wide">Navigating your academic trajectory with precision.</p>
             </div>
             <div class="flex items-center gap-4">
                 <button onclick="openQuizModal()" class="btn-premium px-8 py-4 rounded-2xl text-white font-bold flex items-center gap-3 active:scale-95 transition-all">
@@ -275,7 +276,11 @@
 
     <script src="js/app.js?v=5"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', loadDashboard);
+        async function loadDashboardEnhanced() {
+            await loadDashboard();
+            // Additional polish if needed
+        }
+        document.addEventListener('DOMContentLoaded', loadDashboardEnhanced);
     </script>
 </body>
 </html>

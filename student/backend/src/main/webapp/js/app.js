@@ -179,7 +179,7 @@ async function loadDashboard() {
         return;
     }
 
-    document.getElementById('dashName').textContent = studentData.name;
+    document.getElementById('dashName').textContent = 'Welcome, ' + (studentData.name || 'Scholar');
     document.getElementById('displaySemTitle').textContent = studentData.semester;
 
     // Render Vertical Matrix
@@ -203,9 +203,10 @@ async function loadDashboard() {
     ];
 
     matrix.innerHTML = fields.map(f => `
-        <div class="flex items-center justify-between py-5 border-b border-indigo-50/50 hover:bg-white/[0.2] transition-colors px-4 rounded-xl group">
-            <span class="text-xs font-black text-slate-500 uppercase tracking-widest">${f.label}</span>
-            <span class="text-sm font-bold text-slate-900 tracking-tight group-hover:text-indigo-600 transition-colors">
+        <div class="flex items-center justify-between py-5 border-b border-indigo-50/50 hover:bg-white transition-colors px-4 rounded-xl group relative overflow-hidden">
+            <div class="absolute left-0 top-0 w-1 h-full bg-indigo-500 scale-y-0 group-hover:scale-y-100 transition-transform origin-center"></div>
+            <span class="text-xs font-black text-slate-600 uppercase tracking-widest">${f.label}</span>
+            <span class="text-sm font-black text-slate-900 tracking-tight group-hover:text-indigo-600 transition-colors">
                 ${f.format ? f.format(studentData[f.key]) : (studentData[f.key] || '---')}
             </span>
         </div>

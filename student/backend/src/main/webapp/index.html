@@ -233,8 +233,7 @@
             </span>
         </div>
         <div class="hide-mobile flex items-center gap-10">
-            <a href="#features" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Features</a>
-            <a href="login.html" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Login</a>
+            <a href="login.html" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 transition-colors">Login Account</a>
             <a href="register.html" class="btn-premium px-8 py-3 rounded-xl text-sm font-bold text-white">Get Started</a>
         </div>
     </nav>
@@ -257,9 +256,30 @@
 
         <!-- Hero Container (Three Columns) -->
         <div class="hero-container">
-            <!-- Left: Laptop Quiz -->
             <div class="side-visual">
-                <img src="images/light/laptopquiz.jpeg" alt="Quiz interface" class="laptop-visual">
+                <div class="cards-visual">
+                    <div class="mini-card" style="margin-right: 40px;">
+                        <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center mb-4 text-indigo-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-slate-800 mb-2">Precision Selection</h4>
+                        <p class="text-xs text-slate-500">Advanced algorithms to match your skills with electives.</p>
+                    </div>
+                    <div class="mini-card" style="margin-right: 20px;">
+                        <div class="w-10 h-10 bg-rose-100 rounded-lg flex items-center justify-center mb-4 text-rose-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-slate-800 mb-2">Unified Syllabus</h4>
+                        <p class="text-xs text-slate-500">Instant access to comprehensive course documents.</p>
+                    </div>
+                    <div class="mini-card">
+                        <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center mb-4 text-teal-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.704a1 1 0 00.94-1.342l-4-10A1 1 0 0014.704 0H9.296a1 1 0 00-.94.658l-4 10A1 1 0 005.296 12H10v10a1 1 0 001.707.707l7-7a1 1 0 00-.707-1.707H14V10z"></path></svg>
+                        </div>
+                        <h4 class="font-bold text-slate-800 mb-2">Feedback Loop</h4>
+                        <p class="text-xs text-slate-500">Anonymous reviews from seniors for informed choices.</p>
+                    </div>
+                </div>
             </div>
 
             <!-- Center: Rotating Brain -->
@@ -303,15 +323,13 @@
             </div>
         </div>
 
-        <!-- CTA Buttons -->
-        <div class="reveal-text flex flex-col sm:flex-row gap-5 justify-center pt-20 relative z-20">
-            <a href="register.html" class="btn-premium px-12 py-5 rounded-2xl text-lg font-black text-white flex items-center gap-3">
-                Launch Dashboard
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
-            </a>
-            <button onclick="document.getElementById('features').scrollIntoView()" class="px-12 py-5 border border-slate-200 hover:bg-slate-50 rounded-2xl text-lg font-bold text-slate-600 transition-all backdrop-blur-md">
-                Explore Platform
-            </button>
+        <!-- Platform Explanation -->
+        <div class="reveal-text text-center pt-20 relative z-20 max-w-4xl">
+            <p class="text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-600 to-slate-900 leading-relaxed">
+                Empowering <span class="text-indigo-600">10,000+ students</span> across <span class="text-purple-600">50+ universities</span>. 
+                Our mission is to revolutionize academic choices through AI-driven insights and a seamless registry interface. 
+                <span class="italic text-slate-400 block mt-4 tracking-wider uppercase text-sm font-black">Together, we architect success.</span>
+            </p>
         </div>
     </section>
 
