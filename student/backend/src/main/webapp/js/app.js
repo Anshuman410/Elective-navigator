@@ -218,11 +218,16 @@ async function loadDashboard() {
         </div>
     `).join('');
 
-    // Render Profile Image in Header
+    // Render Profile Image and Name in High-Priority Centered Section
     const imgUrl = studentData.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(studentData.name)}&background=6366f1&color=fff`;
-    const avatarContainer = document.querySelector('.w-12.h-12.bg-white.rounded-2xl');
+    const avatarContainer = document.getElementById('dashboardAvatarContainer');
+    const nameDisplay = document.getElementById('profileDisplayName');
+    
     if (avatarContainer) {
-        avatarContainer.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-cover rounded-2xl shadow-sm border border-indigo-100" alt="Profile">`;
+        avatarContainer.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-cover rounded-full transition-transform duration-700" alt="Profile">`;
+    }
+    if (nameDisplay) {
+        nameDisplay.textContent = studentData.name || '---';
     }
 
     // View State Management
