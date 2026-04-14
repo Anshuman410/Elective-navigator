@@ -18,6 +18,7 @@ async function handleRegister(e) {
     submitBtn.innerHTML = 'Creating Account...';
     
     const payload = {
+        name: document.getElementById('studentName').value,
         studentId: document.getElementById('studentId').value,
         password: document.getElementById('password').value
     };
