@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard | Elective Navigator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -116,6 +117,10 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                     Edit Identity
                 </a>
+                <button onclick="openAnalyticsModal()" class="w-full flex items-center gap-4 px-6 py-4 rounded-2xl text-slate-500 hover:text-indigo-600 hover:bg-slate-50 transition-all font-semibold">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2"></path></svg>
+                    Analytics
+                </button>
             </nav>
         </div>
 
@@ -271,6 +276,57 @@
                 <button onclick="closeCompareModal()" class="text-slate-500 hover:text-white transition-colors"><svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
             </div>
             <div class="p-10 overflow-y-auto flex-grow" id="compareGrid"></div>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div id="analyticsModal" class="fixed inset-0 bg-black/60 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-6">
+        <div class="glass-sidebar w-full max-w-6xl rounded-[3rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] border border-white/10">
+            <div class="p-8 border-b border-white/5 flex justify-between items-center bg-white/5">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-indigo-500 rounded-xl flex items-center justify-center text-white">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-black tracking-tight text-slate-900">Academic Analytics</h3>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Personal Performance Matrix</p>
+                    </div>
+                </div>
+                <button onclick="closeAnalyticsModal()" class="text-slate-500 hover:text-slate-900 transition-colors"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+            </div>
+            <div class="p-8 overflow-y-auto flex-grow space-y-12 bg-slate-50/50">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Interest Profile -->
+                    <div class="glass-card p-8 rounded-[2.5rem] bg-white">
+                        <h4 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">Interest Profile (Radar)</h4>
+                        <canvas id="radarChart" height="300"></canvas>
+                    </div>
+                    <!-- Quiz Breakdown -->
+                    <div class="glass-card p-8 rounded-[2.5rem] bg-white">
+                        <h4 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">Quiz Breakdown (Bar)</h4>
+                        <canvas id="barChartQuiz" height="300"></canvas>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Top Electives -->
+                    <div class="glass-card p-8 rounded-[2.5rem] bg-white lg:col-span-2">
+                        <h4 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">Top Electives Popularity</h4>
+                        <canvas id="barChartElectives" height="300"></canvas>
+                    </div>
+                    <!-- Difficulty Match -->
+                    <div class="glass-card p-8 rounded-[2.5rem] bg-white">
+                        <h4 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">Difficulty Match (Donut)</h4>
+                        <canvas id="donutChartDifficulty" height="300"></canvas>
+                    </div>
+                </div>
+
+                <!-- Performance Comparison -->
+                <div class="glass-card p-8 rounded-[2.5rem] bg-white">
+                    <h4 class="text-sm font-black uppercase tracking-widest text-slate-400 mb-6">Performance Comparison (Progression)</h4>
+                    <canvas id="lineChartPerformance" height="150"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 

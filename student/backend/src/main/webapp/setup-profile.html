@@ -141,8 +141,21 @@
                 <p class="text-slate-500 font-semibold italic">Configure your academic signature for precise elective mapping.</p>
             </header>
 
-            <div class="glass-card p-10 md:p-16 rounded-[3rem] shadow-xl">
-                <form id="setupProfileForm" class="space-y-12">
+                    <!-- Profile Image Section -->
+                    <div class="flex flex-col items-center justify-center mb-12">
+                        <div class="relative group">
+                            <div class="w-32 h-32 rounded-full border-4 border-indigo-500/20 p-1 overflow-hidden transition-all group-hover:border-indigo-500" id="imgPreviewContainer">
+                                <img id="profilePreview" src="https://ui-avatars.com/api/?name=User&background=6366f1&color=fff" class="w-full h-full object-cover rounded-full" alt="Profile">
+                            </div>
+                            <label for="profileImageInput" class="absolute bottom-0 right-0 bg-indigo-600 text-white p-2 rounded-full cursor-pointer shadow-lg hover:bg-indigo-500 transition-all active:scale-95">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            </label>
+                            <input type="file" id="profileImageInput" class="hidden" accept="image/*" onchange="previewImage(this)">
+                        </div>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-4">Upload Personal Signature</p>
+                    </div>
+
+                    <form id="setupProfileForm" class="space-y-12">
                     
                     <!-- Section: Personal -->
                     <div class="space-y-8">
@@ -193,7 +206,14 @@
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Degree/Course</label>
-                                <input type="text" id="course" required class="w-full rounded-2xl px-5 py-4" placeholder="B.Tech, BCA, etc.">
+                                <select id="course" required class="w-full rounded-2xl px-5 py-4 appearance-none">
+                                    <option value="" disabled selected>Select Course</option>
+                                    <option value="CORE">CORE</option>
+                                    <option value="AIML">AIML</option>
+                                    <option value="AI">AI</option>
+                                    <option value="AIDS">AIDS</option>
+                                    <option value="CYBER">CYBER</option>
+                                </select>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Branch/Stream</label>
@@ -244,6 +264,19 @@
 
     <script src="js/app.js"></script>
     <script>
+        let profileBase64 = null;
+
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePreview').src = e.target.result;
+                    profileBase64 = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const studentData = JSON.parse(localStorage.getItem('studentData'));
             if (!studentData) { window.location.href = 'login.html'; return; }
@@ -259,8 +292,19 @@
                     document.getElementById(f).value = studentData[f];
                 }
             });
+
+            if (studentData.profileImage) {
+                document.getElementById('profilePreview').src = studentData.profileImage;
+                profileBase64 = studentData.profileImage;
+            }
         });
-        document.getElementById('setupProfileForm').addEventListener('submit', handleUpdateProfile);
+
+        document.getElementById('setupProfileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // Use a local override for handleUpdateProfile if needed, or modify app.js
+            // I will implement the logic globally in app.js, so I'll just call it
+            await handleUpdateProfile(e, profileBase64);
+        });
     </script>
 </body>
 </html>

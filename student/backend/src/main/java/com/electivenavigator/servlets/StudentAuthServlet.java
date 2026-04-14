@@ -94,6 +94,22 @@ public class StudentAuthServlet extends HttpServlet {
             }
         }
 
+        // Handle Profile Image Upload to Cloudinary if provided as Base64
+        if (jsonBody.has("profileImage") && !jsonBody.get("profileImage").isJsonNull()) {
+            String imageData = jsonBody.get("profileImage").getAsString();
+            if (imageData.startsWith("data:image")) {
+                try {
+                    String imageUrl = com.electivenavigator.utils.CloudinaryConfig.uploadImage(imageData);
+                    updateFields.append("profileImage", imageUrl);
+                } catch (Exception e) {
+                    System.err.println("Cloudinary Upload Error: " + e.getMessage());
+                }
+            } else if (imageData.startsWith("http")) {
+                // Already a URL, just save it
+                updateFields.append("profileImage", imageData);
+            }
+        }
+
         Document updateDoc = new Document("$set", updateFields);
         collection.updateOne(new Document("studentId", studentId), updateDoc);
 

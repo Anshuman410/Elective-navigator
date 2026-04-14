@@ -108,8 +108,8 @@ async function handleLogin(e) {
 /**
  * Handle Profile Update (Comprehensive)
  */
-async function handleUpdateProfile(e) {
-    e.preventDefault();
+async function handleUpdateProfile(e, profileImageBase64 = null) {
+    if (e) e.preventDefault();
     const submitBtn = document.getElementById('saveProfileBtn');
     const msgBox = document.getElementById('setupMessageBox');
     
@@ -119,6 +119,7 @@ async function handleUpdateProfile(e) {
     const studentData = JSON.parse(localStorage.getItem('studentData'));
     const payload = {
         studentId: studentData.studentId,
+        name: document.getElementById('name').value,
         fatherName: document.getElementById('fatherName').value,
         motherName: document.getElementById('motherName').value,
         dob: document.getElementById('dob').value,
@@ -135,6 +136,10 @@ async function handleUpdateProfile(e) {
         enrollNo: document.getElementById('enrollNo').value,
         universityRollNo: document.getElementById('universityRollNo').value
     };
+
+    if (profileImageBase64) {
+        payload.profileImage = profileImageBase64;
+    }
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/auth/update-profile`, {
@@ -212,6 +217,13 @@ async function loadDashboard() {
             </span>
         </div>
     `).join('');
+
+    // Render Profile Image in Header
+    const imgUrl = studentData.profileImage || `https://ui-avatars.com/api/?name=${encodeURIComponent(studentData.name)}&background=6366f1&color=fff`;
+    const avatarContainer = document.querySelector('.w-12.h-12.bg-white.rounded-2xl');
+    if (avatarContainer) {
+        avatarContainer.innerHTML = `<img src="${imgUrl}" class="w-full h-full object-cover rounded-2xl shadow-sm border border-indigo-100" alt="Profile">`;
+    }
 
     // View State Management
     if (studentData.selectedElective && studentData.selectedElective.trim() !== '') {
@@ -792,4 +804,101 @@ function downloadPDF(base64Data, filename) {
         console.error("PDF Download failed", e);
         alert("Failed to download PDF. The file might be corrupted or too large.");
     }
+}
+
+// ----------------- ANALYTICS LOGIC -----------------
+
+function openAnalyticsModal() {
+    document.getElementById('analyticsModal').classList.remove('hidden');
+    renderAnalyticsCharts();
+}
+
+function closeAnalyticsModal() {
+    document.getElementById('analyticsModal').classList.add('hidden');
+}
+
+function renderAnalyticsCharts() {
+    const ctxRadar = document.getElementById('radarChart').getContext('2d');
+    const ctxBarQuiz = document.getElementById('barChartQuiz').getContext('2d');
+    const ctxBarElectives = document.getElementById('barChartElectives').getContext('2d');
+    const ctxDonutDifficulty = document.getElementById('donutChartDifficulty').getContext('2d');
+    const ctxLinePerformance = document.getElementById('lineChartPerformance').getContext('2d');
+
+    // Radar: Interest Profile
+    new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+            labels: ['Programming', 'Development', 'Management', 'Research', 'Theory', 'Logical'],
+            datasets: [{
+                label: 'Interests',
+                data: [85, 90, 45, 60, 50, 80],
+                backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                borderColor: 'rgb(99, 102, 241)',
+                pointBackgroundColor: 'rgb(99, 102, 241)',
+                borderWidth: 2
+            }]
+        },
+        options: { scales: { r: { beginAtZero: true, max: 100 } } }
+    });
+
+    // Bar: Quiz Breakdown
+    new Chart(ctxBarQuiz, {
+        type: 'bar',
+        data: {
+            labels: ['Phase 1', 'Phase 2', 'Phase 3', 'Phase 4'],
+            datasets: [{
+                label: 'Quiz Score',
+                data: [18, 24, 22, 28],
+                backgroundColor: '#6366f1'
+            }]
+        }
+    });
+
+    // Bar: Top Electives Popularity
+    new Chart(ctxBarElectives, {
+        type: 'bar',
+        data: {
+            labels: ['Machine Learning', 'Cloud Computing', 'Cyber Security', 'BlockChain', 'Big Data'],
+            datasets: [{
+                label: 'Selection Popularity (%)',
+                data: [45, 30, 15, 7, 3],
+                backgroundColor: '#ec4899'
+            }]
+        },
+        options: { indexAxis: 'y' }
+    });
+
+    // Donut: Difficulty Match
+    new Chart(ctxDonutDifficulty, {
+        type: 'doughnut',
+        data: {
+            labels: ['Easy', 'Medium', 'Hard'],
+            datasets: [{
+                data: [20, 50, 30],
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
+            }]
+        }
+    });
+
+    // Line: Performance Comparison
+    new Chart(ctxLinePerformance, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [
+                {
+                    label: 'You',
+                    data: [65, 70, 80, 81, 85, 90],
+                    borderColor: '#6366f1',
+                    tension: 0.4
+                },
+                {
+                    label: 'Avg Scholar',
+                    data: [60, 62, 65, 68, 70, 72],
+                    borderColor: '#cbd5e1',
+                    tension: 0.4
+                }
+            ]
+        }
+    });
 }
