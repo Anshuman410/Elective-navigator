@@ -11,14 +11,13 @@ let currentAnalysis = null;
 async function handleRegister(e) {
     e.preventDefault();
     
-    const submitBtn = document.getElementById('submitBtn');
-    const msgBox = document.getElementById('messageBox');
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const msgBox = document.querySelector('.msg-box') || document.createElement('div');
     
     submitBtn.disabled = true;
     submitBtn.innerHTML = 'Creating Account...';
     
     const payload = {
-        name: document.getElementById('name').value,
         studentId: document.getElementById('studentId').value,
         password: document.getElementById('password').value
     };

@@ -48,7 +48,7 @@ public class StudentAuthServlet extends HttpServlet {
     private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws IOException {
         JsonObject jsonBody = getJsonBody(request);
 
-        String name = jsonBody.get("name").getAsString();
+        String name = jsonBody.has("name") ? jsonBody.get("name").getAsString() : "";
         String studentId = jsonBody.get("studentId").getAsString();
         String password = jsonBody.get("password").getAsString();
 

@@ -155,6 +155,18 @@
                                 <input type="text" id="name" required class="w-full rounded-2xl px-5 py-4" placeholder="Enter Full Name">
                             </div>
                             <div class="space-y-2">
+                                <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Father's Name</label>
+                                <input type="text" id="fatherName" required class="w-full rounded-2xl px-5 py-4" placeholder="Father's Name">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Mother's Name</label>
+                                <input type="text" id="motherName" required class="w-full rounded-2xl px-5 py-4" placeholder="Mother's Name">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Date of Birth</label>
+                                <input type="date" id="dob" required class="w-full rounded-2xl px-5 py-4">
+                            </div>
+                            <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Personal Email</label>
                                 <input type="email" id="personalEmail" required class="w-full rounded-2xl px-5 py-4" placeholder="name@email.com">
                             </div>
@@ -180,8 +192,16 @@
                                 <input type="text" id="college" required class="w-full rounded-2xl px-5 py-4" placeholder="University Name">
                             </div>
                             <div class="space-y-2">
+                                <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Degree/Course</label>
+                                <input type="text" id="course" required class="w-full rounded-2xl px-5 py-4" placeholder="B.Tech, BCA, etc.">
+                            </div>
+                            <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Branch/Stream</label>
                                 <input type="text" id="branch" required class="w-full rounded-2xl px-5 py-4" placeholder="Computer Science">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Specialization</label>
+                                <input type="text" id="specialization" required class="w-full rounded-2xl px-5 py-4" placeholder="AI, Web, etc.">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Current Semester</label>
@@ -194,6 +214,14 @@
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Section</label>
                                 <input type="text" id="section" required class="w-full rounded-2xl px-5 py-4" placeholder="A, B, C...">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Class Roll No</label>
+                                <input type="text" id="classRollNo" required class="w-full rounded-2xl px-5 py-4" placeholder="Class Roll">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Enrollment No</label>
+                                <input type="text" id="enrollNo" required class="w-full rounded-2xl px-5 py-4" placeholder="Enrollment No">
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">University Roll</label>
@@ -220,7 +248,12 @@
             const studentData = JSON.parse(localStorage.getItem('studentData'));
             if (!studentData) { window.location.href = 'login.html'; return; }
             
-            const fields = ['name', 'personalEmail', 'officialEmail', 'phone', 'college', 'branch', 'semester', 'section', 'universityRollNo'];
+            const fields = [
+                'name', 'fatherName', 'motherName', 'dob', 'personalEmail', 
+                'officialEmail', 'phone', 'college', 'course', 'branch', 
+                'specialization', 'semester', 'section', 'classRollNo', 
+                'enrollNo', 'universityRollNo'
+            ];
             fields.forEach(f => {
                 if (studentData[f] && document.getElementById(f)) {
                     document.getElementById(f).value = studentData[f];
