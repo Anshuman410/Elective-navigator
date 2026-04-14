@@ -152,7 +152,7 @@
                             </label>
                             <input type="file" id="profileImageInput" class="hidden" accept="image/*" onchange="previewImage(this)">
                         </div>
-                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-4">Upload Personal Signature</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-4">Upload Profile Picture</p>
                     </div>
 
                     <form id="setupProfileForm" class="space-y-12">
@@ -202,26 +202,42 @@
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">University</label>
-                                <input type="text" id="college" required class="w-full rounded-2xl px-5 py-4" placeholder="University Name">
+                                <select id="college" required class="w-full rounded-2xl px-5 py-4 appearance-none">
+                                    <option value="" disabled selected>Select University</option>
+                                    <option value="GRAPHIC ERA (DEEMED TO BE UNIVERSITY),DEHRADUN">GRAPHIC ERA (DEEMED TO BE UNIVERSITY), DEHRADUN</option>
+                                    <option value="GRAPHIC ERA HILL UNIVERSITY,DEHRADUN">GRAPHIC ERA HILL UNIVERSITY, DEHRADUN</option>
+                                    <option value="Graphic Era Hill University - Bhimtal">Graphic Era Hill University - Bhimtal</option>
+                                    <option value="Graphic Era Hill University, Haldwani">Graphic Era Hill University, Haldwani</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Degree/Course</label>
                                 <select id="course" required class="w-full rounded-2xl px-5 py-4 appearance-none">
                                     <option value="" disabled selected>Select Course</option>
-                                    <option value="CORE">CORE</option>
-                                    <option value="AIML">AIML</option>
-                                    <option value="AI">AI</option>
-                                    <option value="AIDS">AIDS</option>
-                                    <option value="CYBER">CYBER</option>
+                                    <option value="BTech">BTech</option>
+                                    <option value="Other">Other</option>
                                 </select>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Branch/Stream</label>
-                                <input type="text" id="branch" required class="w-full rounded-2xl px-5 py-4" placeholder="Computer Science">
+                                <select id="branch" required class="w-full rounded-2xl px-5 py-4 appearance-none">
+                                    <option value="" disabled selected>Select Branch</option>
+                                    <option value="Computer Science">Computer Science</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Specialization</label>
-                                <input type="text" id="specialization" required class="w-full rounded-2xl px-5 py-4" placeholder="AI, Web, etc.">
+                                <select id="specialization" required class="w-full rounded-2xl px-5 py-4 appearance-none">
+                                    <option value="" disabled selected>Select Specialization</option>
+                                    <option value="CORE">CORE</option>
+                                    <option value="AI">AI</option>
+                                    <option value="AIML">AIML</option>
+                                    <option value="AIDS">AIDS</option>
+                                    <option value="CYBER">CYBER</option>
+                                    <option value="Other">Other</option>
+                                </select>
                             </div>
                             <div class="space-y-2">
                                 <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Current Semester</label>
@@ -288,8 +304,17 @@
                 'enrollNo', 'universityRollNo'
             ];
             fields.forEach(f => {
-                if (studentData[f] && document.getElementById(f)) {
-                    document.getElementById(f).value = studentData[f];
+                const el = document.getElementById(f);
+                if (studentData[f] && el) {
+                    // Special handling for selects to ensure values not in the list are shown
+                    if (el.tagName === 'SELECT') {
+                        const exists = Array.from(el.options).some(opt => opt.value === studentData[f]);
+                        if (!exists) {
+                            const newOpt = new Option(studentData[f], studentData[f], true, true);
+                            el.add(newOpt);
+                        }
+                    }
+                    el.value = studentData[f];
                 }
             });
 
