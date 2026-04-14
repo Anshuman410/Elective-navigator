@@ -265,7 +265,7 @@ function renderPostSelectionView(subjectName) {
 
                     if (el.syllabus) {
                         const sylBtn = document.createElement('button');
-                        sylBtn.className = 'mt-10 bg-white/5 hover:bg-white/10 text-white text-xs font-black py-4 px-8 rounded-2xl flex items-center gap-3 transition-all border border-white/10 group';
+                        sylBtn.className = 'mt-10 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-black py-4 px-8 rounded-2xl flex items-center gap-3 transition-all shadow-lg shadow-indigo-500/20 group';
                         sylBtn.innerHTML = `<svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg> Repository Syllabus`;
                         sylBtn.onclick = () => downloadPDF(el.syllabus, el.subjectName);
                         document.getElementById('finalElectiveName').parentNode.appendChild(sylBtn);
@@ -279,10 +279,10 @@ function getElectiveTrait(elective) {
     const cat = (elective.category || '').toLowerCase();
     const name = (elective.subjectName || '').toLowerCase();
 
-    if (cat.includes('program') || name.includes('machine learning') || name.includes('data science') || name.includes('artificial intelligence') || name.includes('c++') || name.includes('java')) return 'Programming';
-    if (cat.includes('develop') || name.includes('web') || name.includes('app') || name.includes('software')) return 'Development';
-    if (cat.includes('manage') || name.includes('project') || name.includes('business') || name.includes('mba') || name.includes('cloud')) return 'Management';
-    if (cat.includes('research') || cat.includes('security') || name.includes('cyber') || name.includes('blockchain') || name.includes('data analysis')) return 'Research';
+    if (cat.includes('program') || name.includes('machine learning') || name.includes('data science') || name.includes('artificial intelligence') || name.includes('c++') || name.includes('java') || name.includes('python') || name.includes('algo') || name.includes('structure')) return 'Programming';
+    if (cat.includes('develop') || name.includes('web') || name.includes('app') || name.includes('software') || name.includes('cloud') || name.includes('blockchain') || name.includes('fullstack')) return 'Development';
+    if (cat.includes('manage') || name.includes('project') || name.includes('business') || name.includes('leadership') || name.includes('mba')) return 'Management';
+    if (cat.includes('research') || cat.includes('security') || cat.includes('analyze') || cat.includes('analysis') || name.includes('cyber') || name.includes('data analysis') || name.includes('statist')) return 'Research';
     
     const mapping = {
         'Programming': ['Machine Learning', 'Data Science', 'Artificial Intelligence', 'Programming'],
@@ -315,8 +315,8 @@ function renderElectivesGrid() {
         msg.id = 'analysisMsgBox';
         msg.className = "glass-card p-10 rounded-[3rem] mb-12 relative overflow-hidden bg-gradient-to-br from-indigo-500/10 to-transparent";
         
-        let analysisHtml = `<h3 class="text-3xl font-black text-white mb-6 text-center tracking-tight">Analytical Priority Report</h3>`;
-        analysisHtml += `<p class="text-slate-400 mb-10 text-center font-medium">Synthesized based on your categorical responses and behavioral quiz results.</p>`;
+        let analysisHtml = `<h3 class="text-3xl font-black text-indigo-950 mb-6 text-center tracking-tight">Analytical Priority Report</h3>`;
+        analysisHtml += `<p class="text-slate-600 mb-10 text-center font-medium">Synthesized based on your categorical responses and behavioral quiz results.</p>`;
         
         analysisHtml += `<div class="grid grid-cols-1 md:grid-cols-2 gap-6">`;
         currentAnalysis.forEach((cat, index) => {
