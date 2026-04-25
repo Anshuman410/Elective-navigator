@@ -135,9 +135,11 @@
                         class="w-full px-6 py-4 rounded-2xl outline-none border transition-all">
                 </div>
 
-                <div class="space-y-2">
-                    <label
-                        class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Password</label>
+                <div class="space-y-2 relative">
+                    <div class="flex items-center justify-between">
+                        <label class="block text-xs font-black text-slate-400 uppercase tracking-widest ml-1">Password</label>
+                        <button type="button" onclick="openChangePasswordModal()" class="text-xs font-bold text-indigo-500 hover:text-indigo-600 transition-colors">Forgot Password?</button>
+                    </div>
                     <input type="password" name="password" id="loginPassword" required placeholder="••••••••"
                         class="w-full px-6 py-4 rounded-2xl outline-none border transition-all">
                 </div>
@@ -155,6 +157,48 @@
                     Create Account
                 </a>
             </div>
+        </div>
+    </div>
+
+    <!-- Change/Forgot Password Modal -->
+    <div id="changePasswordModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center fade-in">
+        <div class="bg-white w-full max-w-md rounded-3xl p-8 shadow-2xl relative">
+            <button onclick="closeChangePasswordModal()" class="absolute top-4 right-4 text-slate-400 hover:text-rose-500 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            
+            <h2 class="text-2xl font-black text-slate-800 mb-2">Reset Password</h2>
+            <p class="text-sm text-slate-500 mb-6 font-semibold">Enter your Student ID. We'll send a 6-digit OTP to your registered email address.</p>
+            
+            <!-- Step 1: Request OTP -->
+            <div id="requestOtpStep" class="space-y-4">
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Student ID</label>
+                    <input type="text" id="forgotStudentId" class="w-full rounded-2xl px-5 py-4" placeholder="Enter Student ID">
+                </div>
+                <button type="button" onclick="sendOtpForPasswordChange()" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-500 transition-all shadow-md">
+                    Send OTP to Email
+                </button>
+            </div>
+
+            <!-- Step 2: Verify & Change -->
+            <div id="verifyOtpStep" class="hidden space-y-4">
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">Enter OTP</label>
+                    <input type="text" id="otpCode" class="w-full rounded-2xl px-5 py-4 tracking-widest text-center font-bold text-lg" placeholder="000000" maxlength="6">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-xs font-black uppercase tracking-widest text-slate-400 ml-1">New Password</label>
+                    <input type="password" id="newPassword" class="w-full rounded-2xl px-5 py-4" placeholder="Enter new password">
+                </div>
+                <button type="button" onclick="verifyAndChangePassword()" class="w-full py-4 bg-emerald-500 text-white rounded-2xl font-bold hover:bg-emerald-400 transition-all shadow-md mt-4">
+                    Verify & Update Password
+                </button>
+            </div>
+            
+            <div id="modalAlert" class="mt-4 hidden p-3 rounded-xl text-sm font-bold text-center"></div>
         </div>
     </div>
 

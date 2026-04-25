@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Random;
+
+import com.electivenavigator.utils.EmailService;
 
 @WebServlet("/api/auth/*")
 public class StudentAuthServlet extends HttpServlet {
@@ -35,6 +38,10 @@ public class StudentAuthServlet extends HttpServlet {
                 handleLogin(request, response);
             } else if ("/update-profile".equals(pathInfo)) {
                 handleUpdateProfile(request, response);
+            } else if ("/send-otp".equals(pathInfo)) {
+                handleSendOtp(request, response);
+            } else if ("/reset-password".equals(pathInfo)) {
+                handleResetPassword(request, response);
             } else {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 response.getWriter().write(gson.toJson(new ApiResponse(false, "Endpoint not found")));
@@ -158,6 +165,113 @@ public class StudentAuthServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write(gson.toJson(new ApiResponse(false, "Invalid Student ID or password.")));
         }
+    }
+
+    private void handleSendOtp(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        JsonObject jsonBody = getJsonBody(request);
+        if (!jsonBody.has("studentId")) {
+             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+             response.getWriter().write(gson.toJson(new ApiResponse(false, "Student ID is required.")));
+             return;
+        }
+        String studentId = jsonBody.get("studentId").getAsString();
+
+        MongoDatabase db = MongoDBConnection.getDatabase();
+        MongoCollection<Document> collection = db.getCollection("students");
+
+        Document student = collection.find(new Document("studentId", studentId)).first();
+        if (student == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write(gson.toJson(new ApiResponse(false, "No student found with this ID.")));
+            return;
+        }
+
+        String email = student.getString("personalEmail");
+        if (email == null || email.trim().isEmpty()) {
+            email = student.getString("officialEmail");
+        }
+
+        if (email == null || email.trim().isEmpty()) {
+             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+             response.getWriter().write(gson.toJson(new ApiResponse(false, "No email registered for this account. Please contact admin.")));
+             return;
+        }
+
+        // Generate 6-digit OTP
+        String otp = String.format("%06d", new Random().nextInt(999999));
+        long expiryTime = System.currentTimeMillis() + (10 * 60 * 1000); // 10 minutes
+
+        // Save OTP and Expiry to user document
+        collection.updateOne(new Document("studentId", studentId), 
+            new Document("$set", new Document("resetOtp", otp).append("resetOtpExpiry", expiryTime)));
+
+        try {
+            EmailService.sendOtpEmail(email, otp);
+            
+            // Do not send the actual email back for security, maybe mask it.
+            String[] emailParts = email.split("@");
+            String maskedEmail = emailParts[0].substring(0, Math.min(2, emailParts[0].length())) + "****@" + emailParts[1];
+            
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getWriter().write(gson.toJson(new ApiResponse(true, "OTP sent to " + maskedEmail)));
+        } catch (Exception e) {
+            System.err.println("Failed to send OTP email: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.getWriter().write(gson.toJson(new ApiResponse(false, "Error sending email. Please try again later.")));
+        }
+    }
+
+    private void handleResetPassword(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        JsonObject jsonBody = getJsonBody(request);
+        
+        if (!jsonBody.has("studentId") || !jsonBody.has("otp") || !jsonBody.has("newPassword")) {
+             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+             response.getWriter().write(gson.toJson(new ApiResponse(false, "studentId, otp, and newPassword are required.")));
+             return;
+        }
+
+        String studentId = jsonBody.get("studentId").getAsString();
+        String otp = jsonBody.get("otp").getAsString();
+        String newPassword = jsonBody.get("newPassword").getAsString();
+
+        MongoDatabase db = MongoDBConnection.getDatabase();
+        MongoCollection<Document> collection = db.getCollection("students");
+
+        Document student = collection.find(new Document("studentId", studentId)).first();
+        if (student == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            response.getWriter().write(gson.toJson(new ApiResponse(false, "Invalid request. User not found.")));
+            return;
+        }
+
+        String storedOtp = student.getString("resetOtp");
+        Long expiry = student.getLong("resetOtpExpiry");
+
+        if (storedOtp == null || expiry == null) {
+             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+             response.getWriter().write(gson.toJson(new ApiResponse(false, "No OTP request found for this user.")));
+             return;
+        }
+
+        if (System.currentTimeMillis() > expiry) {
+             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+             response.getWriter().write(gson.toJson(new ApiResponse(false, "OTP has expired. Please request a new one.")));
+             return;
+        }
+
+        if (!storedOtp.equals(otp)) {
+             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+             response.getWriter().write(gson.toJson(new ApiResponse(false, "Invalid OTP.")));
+             return;
+        }
+
+        // OTP is valid. Reset password and clear OTP fields.
+        collection.updateOne(new Document("studentId", studentId), 
+            new Document("$set", new Document("password", newPassword))
+                .append("$unset", new Document("resetOtp", "").append("resetOtpExpiry", "")));
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(gson.toJson(new ApiResponse(true, "Password has been successfully changed.")));
     }
 
     private JsonObject getJsonBody(HttpServletRequest request) throws IOException {

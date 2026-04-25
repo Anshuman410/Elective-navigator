@@ -6,7 +6,7 @@ public class AdminDashboard extends JFrame {
     public AdminDashboard() {
 
         setTitle("Admin Dashboard");
-        setSize(400,420);
+        setSize(400,500);
         setLayout(null);
 
         JButton add = new JButton("Add Elective");
@@ -33,12 +33,17 @@ public class AdminDashboard extends JFrame {
         viewUsers.setBounds(100,330,200,40);
         add(viewUsers);
 
+        JButton postNotice = new JButton("Post Announcement");
+        postNotice.setBounds(100,390,200,40);
+        add(postNotice);
+
         add.addActionListener(e -> new AddElective());
         view.addActionListener(e -> new ViewElectives());
         edit.addActionListener(e -> new EditElective());
         delete.addActionListener(e -> new DeleteElective());
         manageQueries.addActionListener(e -> new ViewQueries());
         viewUsers.addActionListener(e -> new ViewStudents());
+        postNotice.addActionListener(e -> new ManageAnnouncements());
 
         setVisible(true);
     }

@@ -907,3 +907,311 @@ function renderAnalyticsCharts() {
         }
     });
 }
+
+// ----------------- CHANGE/FORGOT PASSWORD LOGIC -----------------
+
+function openChangePasswordModal() {
+    const modal = document.getElementById('changePasswordModal');
+    if (modal) {
+        document.getElementById('requestOtpStep').classList.remove('hidden');
+        document.getElementById('verifyOtpStep').classList.add('hidden');
+        document.getElementById('modalAlert').classList.add('hidden');
+        if (document.getElementById('otpCode')) document.getElementById('otpCode').value = '';
+        if (document.getElementById('newPassword')) document.getElementById('newPassword').value = '';
+        modal.classList.remove('hidden');
+    }
+}
+
+function closeChangePasswordModal() {
+    const modal = document.getElementById('changePasswordModal');
+    if (modal) modal.classList.add('hidden');
+}
+
+async function sendOtpForPasswordChange() {
+    let studentId;
+    const studentDataStr = localStorage.getItem('studentData');
+    
+    if (studentDataStr) {
+        studentId = JSON.parse(studentDataStr).studentId;
+    } else {
+        // If on login page, read from input
+        const loginStudentIdInput = document.getElementById('forgotStudentId');
+        if (loginStudentIdInput && loginStudentIdInput.value.trim() !== '') {
+            studentId = loginStudentIdInput.value.trim();
+        }
+    }
+
+    if (!studentId) {
+        showModalAlert('Please enter your Student ID first.', 'error');
+        return;
+    }
+
+    const btn = document.querySelector('#requestOtpStep button');
+    if(btn) {
+        btn.disabled = true;
+        btn.innerHTML = 'Sending OTP...';
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/send-otp`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ studentId })
+        });
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+            document.getElementById('requestOtpStep').classList.add('hidden');
+            document.getElementById('verifyOtpStep').classList.remove('hidden');
+            showModalAlert(data.message, 'success');
+            // Store temporarily to verify later if not logged in
+            window.tempStudentIdForReset = studentId;
+        } else {
+            throw new Error(data.message || 'Failed to send OTP.');
+        }
+    } catch (err) {
+        showModalAlert(err.message, 'error');
+    } finally {
+        if(btn) {
+            btn.disabled = false;
+            btn.innerHTML = 'Send OTP to Email';
+        }
+    }
+}
+
+async function verifyAndChangePassword() {
+    const otp = document.getElementById('otpCode').value.trim();
+    const newPassword = document.getElementById('newPassword').value;
+    
+    let studentId = window.tempStudentIdForReset;
+    if (!studentId && localStorage.getItem('studentData')) {
+        studentId = JSON.parse(localStorage.getItem('studentData')).studentId;
+    }
+
+    if (!otp || !newPassword || !studentId) {
+        showModalAlert('Please fill all fields.', 'error');
+        return;
+    }
+
+    const btn = document.querySelector('#verifyOtpStep button');
+    if(btn) {
+        btn.disabled = true;
+        btn.innerHTML = 'Verifying...';
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ studentId, otp, newPassword })
+        });
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+            showModalAlert('Password successfully updated! You can now log in.', 'success');
+            setTimeout(() => {
+                closeChangePasswordModal();
+                // If not logged in, redirect to login
+                if (!localStorage.getItem('studentData')) {
+                    window.location.href = 'login.html';
+                }
+            }, 2000);
+        } else {
+            throw new Error(data.message || 'Failed to reset password.');
+        }
+    } catch (err) {
+        showModalAlert(err.message, 'error');
+    } finally {
+        if(btn) {
+            btn.disabled = false;
+            btn.innerHTML = 'Verify & Update Password';
+        }
+    }
+}
+
+function showModalAlert(msg, type) {
+    const alertBox = document.getElementById('modalAlert');
+    if (!alertBox) return;
+    alertBox.textContent = msg;
+    alertBox.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'bg-emerald-50', 'text-emerald-600');
+    if (type === 'error') {
+        alertBox.classList.add('bg-red-50', 'text-red-600');
+    } else {
+        alertBox.classList.add('bg-emerald-50', 'text-emerald-600');
+    }
+}
+// ----------------- ANNOUNCEMENTS LOGIC -----------------
+
+async function checkAnnouncements() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/announcements`);
+        const data = await response.json();
+        if (response.ok && data.success && data.data && data.data.length > 0) {
+            const latestTimestamp = data.data[0].createdAt || 0;
+            const lastRead = localStorage.getItem('lastReadAnnouncement') || 0;
+            if (latestTimestamp > lastRead) {
+                const dot = document.getElementById('announcementDot');
+                if (dot) dot.classList.remove('hidden');
+            }
+        }
+    } catch (error) {
+        console.error("Failed to check announcements:", error);
+    }
+}
+
+async function openAnnouncementsModal() {
+    const modal = document.getElementById('announcementsModal');
+    if (modal) modal.classList.remove('hidden');
+    
+    // Hide dot
+    const dot = document.getElementById('announcementDot');
+    if (dot) dot.classList.add('hidden');
+
+    const loader = document.getElementById('announcementsLoader');
+    const grid = document.getElementById('announcementsGrid');
+    const noMsg = document.getElementById('noAnnouncementsMsg');
+    
+    if(loader) loader.classList.remove('hidden');
+    if(grid) grid.innerHTML = '';
+    if(noMsg) noMsg.classList.add('hidden');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/announcements`);
+        const data = await response.json();
+        if(loader) loader.classList.add('hidden');
+
+        if (response.ok && data.success && data.data && data.data.length > 0) {
+            // Update last read
+            const latestTimestamp = data.data[0].createdAt || 0;
+            localStorage.setItem('lastReadAnnouncement', latestTimestamp);
+
+            data.data.forEach(notice => {
+                const card = document.createElement('div');
+                card.className = 'glass-card p-6 rounded-[2rem] border border-rose-100 bg-white/90 relative overflow-hidden group mb-4';
+                
+                // Add a subtle accent bar on the left
+                const bar = document.createElement('div');
+                bar.className = 'absolute top-0 left-0 w-1.5 h-full bg-rose-400 group-hover:bg-rose-500 transition-colors';
+                card.appendChild(bar);
+
+                let dateStr = 'Recently';
+                if(notice.createdAt) {
+                    dateStr = new Date(notice.createdAt).toLocaleString(undefined, {
+                        month: 'short', day: 'numeric', year: 'numeric',
+                        hour: '2-digit', minute:'2-digit'
+                    });
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3 pl-3">
+                        <p class="text-rose-500 text-[10px] font-black uppercase tracking-widest">${dateStr}</p>
+                    </div>
+                    <div class="pl-3">
+                        <p class="text-xl font-extrabold text-slate-900 tracking-tight mb-2">${notice.title}</p>
+                        <p class="text-slate-600 font-medium leading-relaxed whitespace-pre-wrap text-sm">${notice.content}</p>
+                    </div>
+                `;
+                if(grid) grid.appendChild(card);
+            });
+        } else {
+            if(noMsg) noMsg.classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error("Error fetching announcements:", error);
+        if(loader) loader.classList.add('hidden');
+        if(noMsg) noMsg.classList.remove('hidden');
+        if(noMsg) noMsg.innerText = "Error loading announcements. Please try again later.";
+    }
+}
+
+function closeAnnouncementsModal() {
+    const modal = document.getElementById('announcementsModal');
+    if (modal) modal.classList.add('hidden');
+}
+
+async function checkAnnouncements() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/announcements`);
+        const data = await response.json();
+        if (response.ok && data.success && data.data && data.data.length > 0) {
+            const latestTimestamp = data.data[0].createdAt || 0;
+            const lastRead = localStorage.getItem('lastReadAnnouncement') || 0;
+            if (latestTimestamp > lastRead) {
+                const dot = document.getElementById('announcementDot');
+                if (dot) dot.classList.remove('hidden');
+            }
+        }
+    } catch (error) {
+        console.error("Failed to check announcements:", error);
+    }
+}
+
+async function openAnnouncementsModal() {
+    const modal = document.getElementById('announcementsModal');
+    if (modal) modal.classList.remove('hidden');
+    
+    // Hide dot
+    const dot = document.getElementById('announcementDot');
+    if (dot) dot.classList.add('hidden');
+
+    const loader = document.getElementById('announcementsLoader');
+    const grid = document.getElementById('announcementsGrid');
+    const noMsg = document.getElementById('noAnnouncementsMsg');
+    
+    if(loader) loader.classList.remove('hidden');
+    if(grid) grid.innerHTML = '';
+    if(noMsg) noMsg.classList.add('hidden');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/announcements`);
+        const data = await response.json();
+        if(loader) loader.classList.add('hidden');
+
+        if (response.ok && data.success && data.data && data.data.length > 0) {
+            // Update last read
+            const latestTimestamp = data.data[0].createdAt || 0;
+            localStorage.setItem('lastReadAnnouncement', latestTimestamp);
+
+            data.data.forEach(notice => {
+                const card = document.createElement('div');
+                card.className = 'glass-card p-6 rounded-[2rem] border border-rose-100 bg-white/90 relative overflow-hidden group mb-4';
+                
+                // Add a subtle accent bar on the left
+                const bar = document.createElement('div');
+                bar.className = 'absolute top-0 left-0 w-1.5 h-full bg-rose-400 group-hover:bg-rose-500 transition-colors';
+                card.appendChild(bar);
+
+                let dateStr = 'Recently';
+                if(notice.createdAt) {
+                    dateStr = new Date(notice.createdAt).toLocaleString(undefined, {
+                        month: 'short', day: 'numeric', year: 'numeric',
+                        hour: '2-digit', minute:'2-digit'
+                    });
+                }
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3 pl-3">
+                        <p class="text-rose-500 text-[10px] font-black uppercase tracking-widest">${dateStr}</p>
+                    </div>
+                    <div class="pl-3">
+                        <p class="text-xl font-extrabold text-slate-900 tracking-tight mb-2">${notice.title}</p>
+                        <p class="text-slate-600 font-medium leading-relaxed whitespace-pre-wrap text-sm">${notice.content}</p>
+                    </div>
+                `;
+                if(grid) grid.appendChild(card);
+            });
+        } else {
+            if(noMsg) noMsg.classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error("Error fetching announcements:", error);
+        if(loader) loader.classList.add('hidden');
+        if(noMsg) noMsg.classList.remove('hidden');
+        if(noMsg) noMsg.innerText = "Error loading announcements. Please try again later.";
+    }
+}
+
+function closeAnnouncementsModal() {
+    const modal = document.getElementById('announcementsModal');
+    if (modal) modal.classList.add('hidden');
+}
